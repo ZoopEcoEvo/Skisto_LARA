@@ -3,4 +3,5 @@
 .RData
 .Ruserdata
 .DS_Store
+*.Rproj
 Background/project_folder_schematic.afdesign
