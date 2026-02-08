@@ -3,9 +3,16 @@ library(rmarkdown)
 library(tidyverse)
 
 #Determine which scripts should be run
+set_up_experiment = T #Will assign tubes and create the raw data file
 process_data = F #Runs data analysis 
 make_report = F #Runs project summary
 knit_manuscript = F #Compiles manuscript draft
+
+
+if(set_up_experiment == T){
+  source(file = "Scripts/00_tube_assignments.R")
+}
+
 
 ############################
 ### Read in the RAW data ###
