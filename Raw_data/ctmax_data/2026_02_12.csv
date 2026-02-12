@@ -1,0 +1,13 @@
+exp_rep,exp_date,acc_day,start_time,water_bath,thermometer,tube,pop,treatment,ctmax
+1,2/12/2026,3,8:20,1,5,1,CP,control,35.5
+1,2/12/2026,3,8:20,1,5,2,CP,control,35.5
+1,2/12/2026,3,8:20,1,5,3,OP,warming,36.8
+1,2/12/2026,3,8:20,1,5,4,CP,warming,35.9
+1,2/12/2026,3,8:20,1,5,5,OP,warming,37.5
+1,2/12/2026,3,8:20,1,5,6,OP,warming,36.9
+1,2/12/2026,3,8:20,1,5,7,OP,control,36.3
+1,2/12/2026,3,8:20,1,5,8,OP,control,36.3
+1,2/12/2026,3,8:20,1,5,9,CP,warming,36.6
+1,2/12/2026,3,8:20,1,5,10,OP,control,36.6
+1,2/12/2026,3,8:20,1,5,11,thermometer,NA,NA
+1,2/12/2026,3,8:20,1,5,12,CP,control,35.6
