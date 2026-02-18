@@ -3,9 +3,9 @@ library(rmarkdown)
 library(tidyverse)
 
 #Determine which scripts should be run
-set_up_experiment = T #Will assign tubes and create the raw data file
+set_up_experiment = F #Will assign tubes and create the raw data file
 process_data = F #Runs data analysis 
-make_report = F #Runs project summary
+make_report = T #Runs project summary
 knit_manuscript = F #Compiles manuscript draft
 
 
@@ -25,6 +25,26 @@ if(process_data == T){
 ##################################
 ### Read in the PROCESSED data ###
 ##################################
+ctmax_data = readr::read_csv(list.files(path = "Raw_data/ctmax_data", 
+                                        pattern = "*.csv", 
+                                        full.names = TRUE),
+                             show_col_types = FALSE) %>% 
+  mutate(datetime = lubridate::as_datetime(paste(exp_date, start_time, sep = " "), format = "%m/%d/%Y %H:%M:%S")) %>% 
+  filter(pop != "thermometer") %>% 
+  filter(ctmax > 35) # One data point on day 0 that is anomalously low
+
+inc_temps = readr::read_csv(list.files(path = "Raw_data/incubator_temps", 
+                           pattern = "*.csv", 
+                           full.names = TRUE),
+                id = "file",
+                show_col_types = FALSE) %>% 
+  janitor::clean_names() %>% 
+  mutate(date_time_est = lubridate::as_datetime(date_time_est, format = "%m/%d/%Y %H:%M:%S")) %>% 
+  drop_na(temperature_c) %>% 
+  mutate("exp_rep" = parse_number(file),
+         "incubator_id" = parse_number(str_extract(file, pattern = "_inc.")), 
+         "incubator_temp" = parse_number(str_remove(file, pattern = "Raw_data/incubator_temps/rep._inc._"))) %>% 
+  select(exp_rep, incubator_id, incubator_temp, "datetime" = date_time_est, "temp_c" = temperature_c)
 
 if(make_report == T){
   render(input = "Output/Reports/report.Rmd", #Input the path to your .Rmd file here
