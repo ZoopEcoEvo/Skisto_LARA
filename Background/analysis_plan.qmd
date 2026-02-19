@@ -1,6 +1,6 @@
 ---
-title: "Project Analysis Plan"
-author: AUTHOR NAME
+title: "Skistodiaptomus pallidus Transcriptomics"
+author: Nathan Gaffin, Matthew Sasaki
 date: last-modified
 date-format: "YYYY-MM-DD"
 language: 
@@ -16,23 +16,24 @@ format:
 
 ## Project Description
 
-This document should be used to outline the analysis plan for a project. It is most useful for this to be completed in full before a project is officially started, but may benefit from information obtained during preliminary trials.
+This project focuses on both the acclimation rate and capacity of Skistodiaptomus pallidus, a freshwater species of calanoid copepod. This project will take place in two different parts. In the first part we will compare CTmax data of a control group (16C) and a warm group (22C), as well as how this differs between two different populations; Oschner Pond and Centenniel Park. In the second part of this project we will do a transcriptomic analysis of the different populations and temperature treatments and compare the expression and regulation of certain genes by looking at differences in RNA.
 
 ## Questions, Objectives, Hypotheses
 
-This section should list all of the questions and objectives for the project. Remember to keep them SMART:
+Questions:
+1. How does the magnitude/capacity of acclimation compare across populations and treatments?
+2. How does the rate of acclimation compare across populations and treatments?
+3, Is there a significant difference in the frequencies of certain RNA strands across the different populations and treatments?
 
--   Specific
+Objectives:
+1. Measure the capacity to acclimate of the different populations and treatments of S. pallidus.
+2. Measure the rate of acclimation of the different populations and treatments of S. pallidus.
+ 3.Determine relationships between the frequency of certain RNA strands in response to heat acclimation.
 
--   Measurable
+Hypothesis:
+1. The warm acclimation group will have exhibit an acclimation response and will have a higher CTmax in comparison to the control group by the end of the experiment.
+2. If the warm group exhibits an acclimation response there will be significant differences in RNA when comparing the warm group and the control group.
 
--   Assignable (who's going to do the work?)
-
--   Realistic
-
--   Time-bounded
-
-It is also helpful to number the questions / objectives.
 
 ## Variable Descriptions
 
