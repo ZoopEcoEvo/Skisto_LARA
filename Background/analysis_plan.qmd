@@ -16,32 +16,46 @@ format:
 
 ## Project Description
 
-This project focuses on both the acclimation rate and capacity of Skistodiaptomus pallidus, a freshwater species of calanoid copepod. This project will take place in two different parts. In the first part we will compare CTmax data of a control group (16C) and a warm group (22C), as well as how this differs between two different populations; Oschner Pond and Centenniel Park. In the second part of this project we will do a transcriptomic analysis of the different populations and temperature treatments and compare the expression and regulation of certain genes by looking at differences in RNA.
+This project focuses on both the acclimation rate and capacity of Skistodiaptomus pallidus, a freshwater species of calanoid copepod. This project will take place in two different parts. In the first part we will compare CTmax data of a control group (16C) and a warm group (22C), as well as how this differs between two different populations; Ochsner Pond and Centennial Park. In the second part of this project we will do a transcriptomic analysis of the different populations and temperature treatments and compare the expression and regulation of certain genes by looking at differences in RNA.
 
 ## Questions, Objectives, Hypotheses
 
 Questions:
-1. How does the magnitude/capacity of acclimation compare across populations and treatments?
-2. How does the rate of acclimation compare across populations and treatments?
-3, Is there a significant difference in the frequencies of certain RNA strands across the different populations and treatments?
+1. How does the magnitude/capacity of acclimation compare across populations?
+2. How does the rate of acclimation compare across populations?
+3. What is the genetic basis for changes in thermal limits?
 
 Objectives:
-1. Measure the capacity to acclimate of the different populations and treatments of S. pallidus.
-2. Measure the rate of acclimation of the different populations and treatments of S. pallidus.
- 3.Determine relationships between the frequency of certain RNA strands in response to heat acclimation.
+1. Compare CTmax between the two treatments and populations to determine the magnitude of acclimation.
+2. Track the CTmax over shorter timescales to compare the rate of acclimation between the two populations.
+3. Determine relationships between the frequency of certain RNA strands in response to heat acclimation. Refine<<
 
 Hypothesis:
-1. The warm acclimation group will have exhibit an acclimation response and will have a higher CTmax in comparison to the control group by the end of the experiment.
-2. If the warm group exhibits an acclimation response there will be significant differences in RNA when comparing the warm group and the control group.
+1. The magnitude of acclimation will be higher in the population with a higher annual maximum temperatures.
+2. The rate of acclimation will be lower in the population with a higher magnitude of acclimation.
+3. We would expect the population with a higher magnitude of acclimation to have a larger change in differentially expressed genes between the two treatments.
 
 
 ## Variable Descriptions
 
 | Variable Name              | Variable Description                  | Response or Explanatory?     | Relevant Question or Objective                                            | Data Type                                  | Units                        | Expected Range                | How are zeros and missing data recorded?     |
 |---------|---------|---------|---------|---------|---------|---------|---------|
-| Short but descriptive name | Thorough description of the variable  | AKA dependent or independent | Which of the stated research questions or objectives is this related to?  | Numeric, categorical, ordinal factor, etc. | Units values are recorded in | If known - can be approximate | Important - no empty cells in the data files |
+| CTmax | Critical thermal maxima, the upper thermal limit of an organism, recorded when the animal stops responding to stimuli  | dependent | Question/Objective 1 & 2  | Numeric | degrees C | 25C-45C | "NA" |
+| Treatment | Control (16C) or Warm (22C), acclimation temperature for each treatment | independent | Question/Objective 1,2, & 3  | categorical | degrees C |  |  |
+| Population | There are two different populations one collected from Ochsner Pond (OP), one collected from Centennial Park (CP) | independent | Question/Objective 1, 2, & 3  | categorical | CP, OP |  |  |
+| Tube | Tube (1-12) that is used for each animal in each CTmax assay  | independent |  | categorical |  | 1-12 |  |
+| Thermometer | Thermometer that is used for recording temperature during each CTmax assay  | independent |  | Numeric | ID |  |  |
+| Water Bath | Water bath that is used as an environment for each CTmax assay  | independent | | Numeric | ID | | |
+| Start Time | Time that the water heater is plugged in and the experiment is officially started  | independent |  | Numeric | Military time | | |
+| Acclimation Day | Day that each dish has been acclimating, day 0 is the day that they are moved to their respective incubators for acclimation  | dependent | Question/Objective 1 & 2  | Numeric | Days | 0-7 | |
+| Experiment Date | Date that the experiment is conducted  | independent | Question/Objective 1 & 2  | Numeric | DD/MM/YYYY | | |
+| Experimental Replicate | Replicate that the experiment is occurring  | independent | Question/Objective 1 & 2  | Numeric |  | 0-5 |  |
+
+
 
 ## Study Design
+
+Will start after second preliminary experiment
 
 This section should provide a detailed description of the study design. In addition to protocols and methodological details, this section should include a detailed accounting of replication and sample sizes.
 

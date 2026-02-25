@@ -6,10 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="AUTHOR NAME">
-<meta name="dcterms.date" content="2026-02-04">
+<meta name="author" content="Nathan Gaffin, Matthew Sasaki">
+<meta name="dcterms.date" content="2026-02-25">
 
-<title>Project Analysis Plan</title>
+<title>Skistodiaptomus pallidus Transcriptomics</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -65,7 +65,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Project Analysis Plan</h1>
+<h1 class="title">Skistodiaptomus pallidus Transcriptomics</h1>
 </div>
 
 
@@ -75,14 +75,14 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>AUTHOR NAME </p>
+             <p>Nathan Gaffin, Matthew Sasaki </p>
           </div>
   </div>
     
     <div>
     <div class="quarto-title-meta-heading">Updated</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">2026-02-04</p>
+      <p class="date">2026-02-25</p>
     </div>
   </div>
   
@@ -96,19 +96,13 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="project-description" class="level2">
 <h2 data-anchor-id="project-description">Project Description</h2>
-<p>This document should be used to outline the analysis plan for a project. It is most useful for this to be completed in full before a project is officially started, but may benefit from information obtained during preliminary trials.</p>
+<p>This project focuses on both the acclimation rate and capacity of Skistodiaptomus pallidus, a freshwater species of calanoid copepod. This project will take place in two different parts. In the first part we will compare CTmax data of a control group (16C) and a warm group (22C), as well as how this differs between two different populations; Ochsner Pond and Centennial Park. In the second part of this project we will do a transcriptomic analysis of the different populations and temperature treatments and compare the expression and regulation of certain genes by looking at differences in RNA.</p>
 </section>
 <section id="questions-objectives-hypotheses" class="level2">
 <h2 data-anchor-id="questions-objectives-hypotheses">Questions, Objectives, Hypotheses</h2>
-<p>This section should list all of the questions and objectives for the project. Remember to keep them SMART:</p>
-<ul>
-<li><p>Specific</p></li>
-<li><p>Measurable</p></li>
-<li><p>Assignable (who’s going to do the work?)</p></li>
-<li><p>Realistic</p></li>
-<li><p>Time-bounded</p></li>
-</ul>
-<p>It is also helpful to number the questions / objectives.</p>
+<p>Questions: 1. How does the magnitude/capacity of acclimation compare across populations? 2. How does the rate of acclimation compare across populations? 3. What is the genetic basis for changes in thermal limits?</p>
+<p>Objectives: 1. Compare CTmax between the two treatments and populations to determine the magnitude of acclimation. 2. Track the CTmax over shorter timescales to compare the rate of acclimation between the two populations. 3. Determine relationships between the frequency of certain RNA strands in response to heat acclimation. Refine&lt;&lt;</p>
+<p>Hypothesis: 1. The magnitude of acclimation will be higher in the population with a higher annual maximum temperatures. 2. The rate of acclimation will be lower in the population with a higher magnitude of acclimation. 3. We would expect the population with a higher magnitude of acclimation to have a larger change in differentially expressed genes between the two treatments.</p>
 </section>
 <section id="variable-descriptions" class="level2">
 <h2 data-anchor-id="variable-descriptions">Variable Descriptions</h2>
@@ -137,20 +131,111 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td>Short but descriptive name</td>
-<td>Thorough description of the variable</td>
-<td>AKA dependent or independent</td>
-<td>Which of the stated research questions or objectives is this related to?</td>
-<td>Numeric, categorical, ordinal factor, etc.</td>
-<td>Units values are recorded in</td>
-<td>If known - can be approximate</td>
-<td>Important - no empty cells in the data files</td>
+<td>CTmax</td>
+<td>Critical thermal maxima, the upper thermal limit of an organism, recorded when the animal stops responding to stimuli</td>
+<td>dependent</td>
+<td>Question/Objective 1 &amp; 2</td>
+<td>Numeric</td>
+<td>degrees C</td>
+<td>25C-45C</td>
+<td>“NA”</td>
+</tr>
+<tr class="even">
+<td>Treatment</td>
+<td>Control (16C) or Warm (22C), acclimation temperature for each treatment</td>
+<td>independent</td>
+<td>Question/Objective 1,2, &amp; 3</td>
+<td>categorical</td>
+<td>degrees C</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Population</td>
+<td>There are two different populations one collected from Ochsner Pond (OP), one collected from Centennial Park (CP)</td>
+<td>independent</td>
+<td>Question/Objective 1, 2, &amp; 3</td>
+<td>categorical</td>
+<td>CP, OP</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Tube</td>
+<td>Tube (1-12) that is used for each animal in each CTmax assay</td>
+<td>independent</td>
+<td></td>
+<td>categorical</td>
+<td></td>
+<td>1-12</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Thermometer</td>
+<td>Thermometer that is used for recording temperature during each CTmax assay</td>
+<td>independent</td>
+<td></td>
+<td>Numeric</td>
+<td>ID</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Water Bath</td>
+<td>Water bath that is used as an environment for each CTmax assay</td>
+<td>independent</td>
+<td></td>
+<td>Numeric</td>
+<td>ID</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Start Time</td>
+<td>Time that the water heater is plugged in and the experiment is officially started</td>
+<td>independent</td>
+<td></td>
+<td>Numeric</td>
+<td>Military time</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Acclimation Day</td>
+<td>Day that each dish has been acclimating, day 0 is the day that they are moved to their respective incubators for acclimation</td>
+<td>dependent</td>
+<td>Question/Objective 1 &amp; 2</td>
+<td>Numeric</td>
+<td>Days</td>
+<td>0-7</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Experiment Date</td>
+<td>Date that the experiment is conducted</td>
+<td>independent</td>
+<td>Question/Objective 1 &amp; 2</td>
+<td>Numeric</td>
+<td>DD/MM/YYYY</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Experimental Replicate</td>
+<td>Replicate that the experiment is occurring</td>
+<td>independent</td>
+<td>Question/Objective 1 &amp; 2</td>
+<td>Numeric</td>
+<td></td>
+<td>0-5</td>
+<td></td>
 </tr>
 </tbody>
 </table>
 </section>
 <section id="study-design" class="level2">
 <h2 data-anchor-id="study-design">Study Design</h2>
+<p>Will start after second preliminary experiment</p>
 <p>This section should provide a detailed description of the study design. In addition to protocols and methodological details, this section should include a detailed accounting of replication and sample sizes.</p>
 <p>Consider including a schematic or diagram. This could be an embedded image, or an encoded diagram (e.g.&nbsp;Quarto includes native support for <a href="https://quarto.org/docs/authoring/diagrams.html#overview">mermaid diagrams</a>).</p>
 </section>
