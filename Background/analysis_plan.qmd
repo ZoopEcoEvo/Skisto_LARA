@@ -40,17 +40,16 @@ Hypothesis:
 
 | Variable Name              | Variable Description                  | Response or Explanatory?     | Relevant Question or Objective                                            | Data Type                                  | Units                        | Expected Range                | How are zeros and missing data recorded?     |
 |---------|---------|---------|---------|---------|---------|---------|---------|
-| CTmax | Critical thermal maxima, the upper thermal limit of an organism, recorded when the animal stops responding to stimuli  | dependent | Question/Objective 1 & 2  | Numeric | degrees C | 25C-45C | "NA" |
+| CTmax | Critical thermal maxima, the upper thermal limit of an organism, recorded when the animal stops responding to stimuli  | dependent | Question/Objective 1, 2, & 3  | Numeric | degrees C | 25C-45C | "NA" |
 | Treatment | Control (16C) or Warm (22C), acclimation temperature for each treatment | independent | Question/Objective 1,2, & 3  | categorical | degrees C |  |  |
 | Population | There are two different populations one collected from Ochsner Pond (OP), one collected from Centennial Park (CP) | independent | Question/Objective 1, 2, & 3  | categorical | CP, OP |  |  |
-| Tube | Tube (1-12) that is used for each animal in each CTmax assay  | independent |  | categorical |  | 1-12 |  |
-| Thermometer | Thermometer that is used for recording temperature during each CTmax assay  | independent |  | Numeric | ID |  |  |
-| Water Bath | Water bath that is used as an environment for each CTmax assay  | independent | | Numeric | ID | | |
-| Start Time | Time that the water heater is plugged in and the experiment is officially started  | independent |  | Numeric | Military time | | |
-| Acclimation Day | Day that each dish has been acclimating, day 0 is the day that they are moved to their respective incubators for acclimation  | dependent | Question/Objective 1 & 2  | Numeric | Days | 0-7 | |
-| Experiment Date | Date that the experiment is conducted  | independent | Question/Objective 1 & 2  | Numeric | DD/MM/YYYY | | |
-| Experimental Replicate | Replicate that the experiment is occurring  | independent | Question/Objective 1 & 2  | Numeric |  | 0-5 |  |
-
+| Tube | Tube (1-12) that is used for each animal in each CTmax assay  |  |  | categorical |  | 1-12 |  |
+| Thermometer | Thermometer that is used for recording temperature during each CTmax assay  | |  | Numeric | ID |  |  |
+| Water Bath | Water bath that is used as an environment for each CTmax assay  |  | | Numeric | ID | | |
+| Start Time | Time that the water heater is plugged in and the experiment is officially started  | independent | Questions 1 & 2 | Numeric | Military time | | |
+| Acclimation Day | Day that each dish has been acclimating, day 0 is the day that they are moved to their respective incubators for acclimation  | independent | Question/Objective 1, 2 & 3  | Numeric | Days | 0-7 | |
+| Experiment Date | Date that the experiment is conducted  |  |  | Numeric | DD/MM/YYYY | | |
+| Experimental Replicate | Replicate that the experiment is occurring  |  |  | Numeric |  | 0-5 |  |
 
 
 ## Study Design
