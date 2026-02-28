@@ -69,13 +69,61 @@ You may need to 'clean' the data after collection. This section should describe 
 
 ### Key Summary Statistics
 
-This section will typically be short. What are the main summary statistics of interest (e.g. mean and standard error, coefficient of variation, etc.), and for which groups will you calculate these values?
+| Summary Statistic    |  Calculated For Which Groups  |
+|---------|---------|---------|---------|---------|---------|---------|---------|
+| Mean | CTmax for each treatment + population for each day  |
+| Standard Deviation | CTmax for each treatment + population for each day  |
+| Coefficient of Variation | CTmax for each treatment + population for each day  |
+| Maximum | CTmax for each treatment + population for each day |
+| Minimum | CTmax for each treatment + population for each day |
+| RNA related stuff | ... |
 
 ### Statistical Tests of Hypotheses
 
-The main statistics section will outline the statistical analyses planned and how they will be interpreted to test the stated hypotheses. This includes tests of assumptions, how model fit will be evaluated, any post-hoc tests that could be needed, etc. This section should also include a brief description of any non-standard analyses, and any caveats or expected places where caution will be warranted when interpreting or extrapolating the results. Throughout this section, it is critical that the analyses described are clearly linked to the questions and hypotheses proposed above.
+Hypothesis 1:
+- Tests of assumptions:
 
-This section should also describe how missing values will be handled. If planned analyses are robust to missing values, state that in this section - it can be helpful to have a reminder of this after data is collected.
+- How model fit will be evaluated:
+
+- Post-hoc tests:
+
+Because this hypothesis is only comparing two groups, a post-hoc test is not applicable.
+
+- Non-standard analyses:
+
+- Caveats/Caution when interpreting results: 
+
+Causality: Significant differences between the CTmax of the two populations would show a correlation between the magnitude of acclimation and the population/sample site but would not show causality since unmeasured factors could influence outcomes.
+
+Generalizations: Findings from this experiment can not be used to generalize  other freshwater calanoid copepods, or other species living in either population, but can be used to draw implications.
+
+Generation: Both populations have spent enough time in lab conditions that they are >F3, this could effect results, but does not diminish or weaken them, but should be made clear nonetheless.
+
+- Handling missing values: 
+
+CTmax: Missing ("NA") CTmax values will not be used for data analyses, CTmax values that are recorded under ~30C will not be used. 
+
+Non-CTmax data: Missing data other than CTmax data will interfere with results if used, so we will not use that either. 
+
+
+Hypothesis 2:
+
+- Tests of assumptions:
+- How model fit will be evaluated:
+- Post-hoc tests:
+- Non-standard analyses:
+- Caveats/Caution when interpreting results:
+- Handling missing values:
+
+
+Hypothesis 3:
+- Tests of assumptions:
+- How model fit will be evaluated:
+- Post-hoc tests:
+- Non-standard analyses:
+- Caveats/Caution when interpreting results:
+- Handling missing values:
+
 
 ### Alternative Approaches
 

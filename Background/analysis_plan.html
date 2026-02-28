@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Nathan Gaffin, Matthew Sasaki">
-<meta name="dcterms.date" content="2026-02-25">
+<meta name="dcterms.date" content="2026-02-28">
 
 <title>Skistodiaptomus pallidus Transcriptomics</title>
 <style>
@@ -82,7 +82,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Updated</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">2026-02-25</p>
+      <p class="date">2026-02-28</p>
     </div>
   </div>
   
@@ -134,7 +134,7 @@ ul.task-list li input[type="checkbox"] {
 <td>CTmax</td>
 <td>Critical thermal maxima, the upper thermal limit of an organism, recorded when the animal stops responding to stimuli</td>
 <td>dependent</td>
-<td>Question/Objective 1 &amp; 2</td>
+<td>Question/Objective 1, 2, &amp; 3</td>
 <td>Numeric</td>
 <td>degrees C</td>
 <td>25C-45C</td>
@@ -163,7 +163,7 @@ ul.task-list li input[type="checkbox"] {
 <tr class="even">
 <td>Tube</td>
 <td>Tube (1-12) that is used for each animal in each CTmax assay</td>
-<td>independent</td>
+<td></td>
 <td></td>
 <td>categorical</td>
 <td></td>
@@ -173,7 +173,7 @@ ul.task-list li input[type="checkbox"] {
 <tr class="odd">
 <td>Thermometer</td>
 <td>Thermometer that is used for recording temperature during each CTmax assay</td>
-<td>independent</td>
+<td></td>
 <td></td>
 <td>Numeric</td>
 <td>ID</td>
@@ -183,7 +183,7 @@ ul.task-list li input[type="checkbox"] {
 <tr class="even">
 <td>Water Bath</td>
 <td>Water bath that is used as an environment for each CTmax assay</td>
-<td>independent</td>
+<td></td>
 <td></td>
 <td>Numeric</td>
 <td>ID</td>
@@ -194,7 +194,7 @@ ul.task-list li input[type="checkbox"] {
 <td>Start Time</td>
 <td>Time that the water heater is plugged in and the experiment is officially started</td>
 <td>independent</td>
-<td></td>
+<td>Questions 1 &amp; 2</td>
 <td>Numeric</td>
 <td>Military time</td>
 <td></td>
@@ -203,8 +203,8 @@ ul.task-list li input[type="checkbox"] {
 <tr class="even">
 <td>Acclimation Day</td>
 <td>Day that each dish has been acclimating, day 0 is the day that they are moved to their respective incubators for acclimation</td>
-<td>dependent</td>
-<td>Question/Objective 1 &amp; 2</td>
+<td>independent</td>
+<td>Question/Objective 1, 2 &amp; 3</td>
 <td>Numeric</td>
 <td>Days</td>
 <td>0-7</td>
@@ -213,8 +213,8 @@ ul.task-list li input[type="checkbox"] {
 <tr class="odd">
 <td>Experiment Date</td>
 <td>Date that the experiment is conducted</td>
-<td>independent</td>
-<td>Question/Objective 1 &amp; 2</td>
+<td></td>
+<td></td>
 <td>Numeric</td>
 <td>DD/MM/YYYY</td>
 <td></td>
@@ -223,8 +223,8 @@ ul.task-list li input[type="checkbox"] {
 <tr class="even">
 <td>Experimental Replicate</td>
 <td>Replicate that the experiment is occurring</td>
-<td>independent</td>
-<td>Question/Objective 1 &amp; 2</td>
+<td></td>
+<td></td>
 <td>Numeric</td>
 <td></td>
 <td>0-5</td>
@@ -247,12 +247,105 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="key-summary-statistics" class="level3">
 <h3 data-anchor-id="key-summary-statistics">Key Summary Statistics</h3>
-<p>This section will typically be short. What are the main summary statistics of interest (e.g.&nbsp;mean and standard error, coefficient of variation, etc.), and for which groups will you calculate these values?</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Summary Statistic</th>
+<th>Calculated For Which Groups</th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Mean</td>
+<td>CTmax for each treatment + population for each day</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Standard Deviation</td>
+<td>CTmax for each treatment + population for each day</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Coefficient of Variation</td>
+<td>CTmax for each treatment + population for each day</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Maximum</td>
+<td>CTmax for each treatment + population for each day</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Minimum</td>
+<td>CTmax for each treatment + population for each day</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>RNA related stuff</td>
+<td>…</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="statistical-tests-of-hypotheses" class="level3">
 <h3 data-anchor-id="statistical-tests-of-hypotheses">Statistical Tests of Hypotheses</h3>
-<p>The main statistics section will outline the statistical analyses planned and how they will be interpreted to test the stated hypotheses. This includes tests of assumptions, how model fit will be evaluated, any post-hoc tests that could be needed, etc. This section should also include a brief description of any non-standard analyses, and any caveats or expected places where caution will be warranted when interpreting or extrapolating the results. Throughout this section, it is critical that the analyses described are clearly linked to the questions and hypotheses proposed above.</p>
-<p>This section should also describe how missing values will be handled. If planned analyses are robust to missing values, state that in this section - it can be helpful to have a reminder of this after data is collected.</p>
+<p>Hypothesis 1: - Tests of assumptions:</p>
+<ul>
+<li><p>How model fit will be evaluated:</p></li>
+<li><p>Post-hoc tests: Because this hypothesis is only comparing two groups, a post-hoc test is not applicable.</p></li>
+<li><p>Non-standard analyses:</p></li>
+<li><p>Caveats/Caution when interpreting results: Causality: Significant differences between the CTmax of the two populations would show a correlation between the magnitude of acclimation and the population/sample site but would not show causality since unmeasured factors could influence outcomes. Generalizations: Findings from this experiment can not be used to generalize other freshwater calanoid copepods, or other species living in either population, but can be used to draw implications. Generation: Both populations have spent enough time in lab conditions that they are &gt;F3, this could effect results, but does not diminish or weaken them, but should be made clear nonetheless.</p></li>
+<li><p>Handling missing values: CTmax: Missing (“NA”) CTmax values will not be used for data analyses, CTmax values that are recorded under ~30C will not be used. Non-CTmax data: Missing data other than CTmax data will interfere with results if used, so we will not use that either.</p></li>
+</ul>
+<p>Hypothesis 2: - Tests of assumptions: - How model fit will be evaluated: - Post-hoc tests: - Non-standard analyses: - Caveats/Caution when interpreting results: - Handling missing values:</p>
+<p>Hypothesis 3: - Tests of assumptions: - How model fit will be evaluated: - Post-hoc tests: - Non-standard analyses: - Caveats/Caution when interpreting results: - Handling missing values:</p>
 </section>
 <section id="alternative-approaches" class="level3">
 <h3 data-anchor-id="alternative-approaches">Alternative Approaches</h3>
