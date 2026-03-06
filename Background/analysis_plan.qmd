@@ -71,33 +71,30 @@ You may need to 'clean' the data after collection. This section should describe 
 
 | Summary Statistic    |  Calculated For Which Groups  |
 |---------|---------|---------|---------|---------|---------|---------|---------|
-| Mean | CTmax for each treatment + population for each day  |
-| Standard Deviation | CTmax for each treatment + population for each day  |
-| Coefficient of Variation | CTmax for each treatment + population for each day  |
-| Maximum | CTmax for each treatment + population for each day |
-| Minimum | CTmax for each treatment + population for each day |
+| Mean +/- Standard Deviation | CTmax for each treatment + population for each day for each replicate |
+| Coefficient of Variation | CTmax for each treatment + population for each day, how it changes over the course of the experiment, how similar rate of acclimation is across individuals in a population |
+| Rate
+| Magnitude
 | RNA related stuff | ... |
 
 ### Statistical Tests of Hypotheses
 
 Hypothesis 1:
-- Tests of assumptions:
 
 - How model fit will be evaluated:
 
+Using the package "performance" in R
+
 - Post-hoc tests:
 
-Because this hypothesis is only comparing two groups, a post-hoc test is not applicable.
+Have magnitude of acclimation estimated for both populations, climate data will be pulled for both sites and then test for a significant difference, if our hypothesis is supported we would expect...
 
-- Non-standard analyses:
 
 - Caveats/Caution when interpreting results: 
 
-Causality: Significant differences between the CTmax of the two populations would show a correlation between the magnitude of acclimation and the population/sample site but would not show causality since unmeasured factors could influence outcomes.
+Causality: Significant differences between the CTmax of the two populations would show a correlation between the magnitude of acclimation and the population/sample site but would not show causality since unmeasured factors could influence outcomes. Cannot infer causality with only two populations.
 
-Generalizations: Findings from this experiment can not be used to generalize  other freshwater calanoid copepods, or other species living in either population, but can be used to draw implications.
-
-Generation: Both populations have spent enough time in lab conditions that they are >F3, this could effect results, but does not diminish or weaken them, but should be made clear nonetheless.
+Generation: Both populations have spent enough time in lab conditions that they are >F3, this could effect results, but does not diminish or weaken them, but should be made clear nonetheless. On the other hand the generation time allows us to make conclusions we would not be able to make otherwise had they been directly from the field.
 
 - Handling missing values: 
 
@@ -108,15 +105,16 @@ Non-CTmax data: Missing data other than CTmax data will interfere with results i
 
 Hypothesis 2:
 
-- Tests of assumptions:
 - How model fit will be evaluated:
 - Post-hoc tests:
 - Non-standard analyses:
 - Caveats/Caution when interpreting results:
 - Handling missing values:
+- 
 
 
 Hypothesis 3:
+
 - Tests of assumptions:
 - How model fit will be evaluated:
 - Post-hoc tests:
@@ -132,3 +130,9 @@ This section should outline potential alternative approaches that could be neede
 ## Key Figures
 
 This section is relatively speculative. It can, however, be helpful to have a section where you outline the expected tables and figures that might be important to display based on the planned questions, analyses, hypotheses, etc.
+
+Raw data figure: 2 panels one for centennial, and one for oschner to compare treatments within populations (CTmax overtime, mean CTmax per replicate per day) applies to magnitude and rate of reaction
+
+Effect of acclimation: difference between warm acclimation and control per day compared across populations
+
+Potential reaction norm figure comparing the two different warm treatments, mean +/- SE CTmax on last day and first day for both populations and treatments
