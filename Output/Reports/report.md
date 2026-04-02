@@ -174,7 +174,7 @@ ctmax_data %>%
   filter(exp_rep == 1) %>% 
   group_by(pop, treatment, acc_hours) %>% 
   summarise(mean_ctmax = mean(ctmax)) %>% 
-ggplot(aes(x = acc_hours, y = mean_ctmax, colour = treatment)) + 
+  ggplot(aes(x = acc_hours, y = mean_ctmax, colour = treatment)) + 
   facet_wrap(pop~.) + 
   geom_point(data = filter(ctmax_data, exp_rep == 1), aes(y = ctmax),
              alpha = 0.3) + 
@@ -214,11 +214,11 @@ ctmax_data %>%
   geom_point(size = 4, 
              position = position_dodge(width = 0.5)) + 
   geom_line(linewidth = 2, 
-             position = position_dodge(width = 0.5)) + 
+            position = position_dodge(width = 0.5)) + 
   geom_errorbar(aes(ymin = mean_ctmax - ctmax_se, 
                     ymax = mean_ctmax + ctmax_se), 
                 linewidth = 2, width = 0.2, 
-             position = position_dodge(width = 0.5)) + 
+                position = position_dodge(width = 0.5)) + 
   theme_matt()
 ```
 
@@ -235,7 +235,7 @@ results.
 ctmax_data %>% 
   group_by(pop, treatment, acc_hours) %>% 
   summarise(mean_ctmax = mean(ctmax)) %>% 
-ggplot(aes(x = acc_hours, y = mean_ctmax, colour = treatment)) + 
+  ggplot(aes(x = acc_hours, y = mean_ctmax, colour = treatment)) + 
   facet_wrap(pop~.) + 
   geom_point(data = ctmax_data, aes(y = ctmax),
              alpha = 0.3) + 
@@ -312,7 +312,7 @@ contrasts = emmeans::emmeans(prelim.model, ~ treatment | pop * acc_hours) %>%
 
 contrasts %>% 
   mutate(acc_hours = if_else(acc_hours == 0, 0.01, acc_hours)) %>% 
-ggplot(aes(x = acc_hours, y = estimate)) + 
+  ggplot(aes(x = acc_hours, y = estimate)) + 
   facet_wrap(pop~.) + 
   geom_hline(yintercept = 0) +
   geom_errorbar(aes(ymin = estimate - SE, ymax = estimate + SE), 
@@ -369,15 +369,118 @@ for (i in 1:length(unique(param_data$pop))){
   pop_data = filter(param_data, pop == unique(param_data$pop)[i]) %>% 
     drop_na() 
   
-  mod1 = try(nls_multstart(estimate ~ z_asymp*(1-exp(-lambda*acc_hours)),
-                            data = pop_data,
-                            iter = 1000,
-                            start_lower = c(z_asymp=0.01, lambda=0),
-                            start_upper = c(z_asymp = 10, lambda=1),
-                            lower = c(z_asymp = 0, lambda=0),
-                            supp_errors = 'Y',
-                            convergence_count = FALSE,
-                            na.action = na.omit), silent =TRUE)
+  mod1 = try(nls.multstart::nls_multstart(estimate ~ z_asymp*(1-exp(-lambda*acc_hours)),
+                           data = pop_data,
+                           iter = 1000,
+                           start_lower = c(z_asymp=0.01, lambda=0),
+                           start_upper = c(z_asymp = 10, lambda=1),
+                           lower = c(z_asymp = 0, lambda=0),
+                           supp_errors = 'Y',
+                           convergence_count = FALSE,
+                           na.action = na.omit), silent =TRUE)
+  
+  
+  fit_error = (is(mod1, 'try-error')|is(mod1,'error')) 
+  
+  if(fit_error==F){   #if model converged
+    pop_params = data.frame(
+      z_asymp = summary(mod1)$coefficients[1,1],
+      z_asymp_var = vcov(mod1)[1,1],
+      lambda = summary(mod1)$coefficients[2,1],
+      lambda.var = vcov(mod1)[2,2],
+      pop = pop_data$pop[1],
+      num_contrasts = length(pop_data$estimate)) %>% 
+      mutate(arr = z_asymp / (22-16))
+    
+    acc_params = bind_rows(acc_params, pop_params)
+  }
+}
+
+if(dim(acc_params)[1] > 0){
+  acc_params %>% 
+    select(pop, n = num_contrasts, z_asymp, arr, lambda) %>% 
+    knitr::kable()
+}
+```
+
+| pop |   n |   z_asymp |       arr |     lambda |
+|:----|----:|----------:|----------:|-----------:|
+| CP  |   8 | 0.9634084 | 0.1605681 |  0.0124842 |
+| OP  |   7 | 0.4500000 | 0.0750000 | 27.8902376 |
+
+The plot here shows the estimated contrasts on each day. The model fit
+is included for both populations (in blue), along with the estimated
+final magnitude of acclimation (grey horizontal line).
+
+``` r
+
+if(dim(acc_params)[1] > 0){
+  
+  cp_params = filter(acc_params, pop == "CP")
+  op_params = filter(acc_params, pop == "OP")
+  
+  # Create a new data frame with predicted values
+  acc_hours <- seq(0, max(param_data$acc_hours), length.out = 100)
+  cp_pred <- cp_params$z_asymp*(1-exp(-cp_params$lambda*acc_hours))
+  op_pred <- op_params$z_asymp*(1-exp(-op_params$lambda*acc_hours))
+  
+  predictions = data.frame(acc_hours, 
+                           cp_pred, 
+                           op_pred) %>% 
+    pivot_longer(cols = c(cp_pred:op_pred), 
+                 names_to = c("pop", NA), 
+                 names_sep = "_", 
+                 values_to = "pred") %>% 
+    mutate(pop = toupper(pop))
+  
+  param_data %>% 
+    ggplot(aes(x = acc_hours, y = estimate)) + 
+    facet_wrap(pop~.) + 
+    geom_hline(yintercept = 0) +
+    geom_hline(data = acc_params, aes(yintercept = z_asymp),
+               colour = "grey") + 
+    geom_errorbar(aes(ymin = estimate - SE, ymax = estimate + SE), 
+                  linewidth = 1, width = 0.3) + 
+    geom_point(size = 3) + 
+    geom_line(data = predictions, aes(x = acc_hours, y = pred),
+              colour = "blue",
+              linewidth=1.5)+
+    labs(x = "Acc. Day", 
+         y = "Contrast (Warming - Control; °C)") + 
+    theme_matt_facets()
+  
+}
+```
+
+<img src="../Figures/markdown/unnamed-chunk-14-1.png" style="display: block; margin: auto;" />
+
+An alternative approach is to estimate simple effect sizes.
+
+``` r
+effects = ctmax_data %>% 
+  group_by(exp_rep, acc_hours, pop, treatment) %>% 
+  summarise(mean_ctmax = mean(ctmax, na.rm = T)) %>% 
+  pivot_wider(names_from = treatment, 
+              values_from = mean_ctmax) %>% 
+  mutate(effect = warming - control) %>% 
+mutate(acc_hours = if_else(acc_hours == 0, 0.01, acc_hours)) 
+
+effects_acc_params = data.frame()
+
+for (i in 1:length(unique(effects$pop))){
+  
+  pop_data = filter(effects, pop == unique(effects$pop)[i]) %>% 
+    drop_na() 
+  
+  mod1 = try(nls.multstart::nls_multstart(effect ~ z_asymp*(1-exp(-lambda*acc_hours)),
+                                          data = pop_data,
+                                          iter = 1000,
+                                          start_lower = c(z_asymp=0.01, lambda=0),
+                                          start_upper = c(z_asymp = 10, lambda=1),
+                                          lower = c(z_asymp = 0, lambda=0),
+                                          supp_errors = 'Y',
+                                          convergence_count = FALSE,
+                                          na.action = na.omit), silent =TRUE)
   
   pop_params = data.frame(
     z_asymp = summary(mod1)$coefficients[1,1],
@@ -385,53 +488,47 @@ for (i in 1:length(unique(param_data$pop))){
     lambda = summary(mod1)$coefficients[2,1],
     lambda.var = vcov(mod1)[2,2],
     pop = pop_data$pop[1],
-    num_contrasts = length(pop_data$estimate)) %>% 
+    num_contrasts = length(pop_data$effect)) %>% 
     mutate(arr = z_asymp / (22-16))
   
-  acc_params = bind_rows(acc_params, pop_params)
+  effects_acc_params = bind_rows(effects_acc_params, pop_params)
+  
+}
 
-  }
-
-acc_params %>% 
+effects_acc_params %>% 
   select(pop, n = num_contrasts, z_asymp, arr, lambda) %>% 
   knitr::kable()
 ```
 
 | pop |   n |   z_asymp |       arr |     lambda |
 |:----|----:|----------:|----------:|-----------:|
-| CP  |   8 | 0.9634085 | 0.1605681 |  0.0124842 |
-| OP  |   7 | 0.4500000 | 0.0750000 | 27.8902384 |
-
-The plot here shows the estimated contrasts on each day. The model fit
-is included for both populations (in blue), along with the estimated
-final magnitude of acclimation (grey horizontal line).
+| CP  |   9 | 0.9636734 | 0.1606122 |  0.0124752 |
+| OP  |   8 | 0.4500000 | 0.0750000 | 27.5411979 |
 
 ``` r
-cp_params = filter(acc_params, pop == "CP")
-op_params = filter(acc_params, pop == "OP")
+cp_effect_params = filter(effects_acc_params, pop == "CP")
+op_effect_params = filter(effects_acc_params, pop == "OP")
 
 # Create a new data frame with predicted values
-acc_hours <- seq(0, max(param_data$acc_hours), length.out = 100)
-cp_pred <- cp_params$z_asymp*(1-exp(-cp_params$lambda*acc_hours))
-op_pred <- op_params$z_asymp*(1-exp(-op_params$lambda*acc_hours))
+acc_hours <- seq(0, max(effects$acc_hours), length.out = 100)
+cp_effect_pred <- cp_effect_params$z_asymp*(1-exp(-cp_effect_params$lambda*acc_hours))
+op_effect_pred <- op_effect_params$z_asymp*(1-exp(-op_effect_params$lambda*acc_hours))
 
-predictions = data.frame(acc_hours, 
-                         cp_pred, 
-                         op_pred) %>% 
-  pivot_longer(cols = c(cp_pred:op_pred), 
-               names_to = c("pop", NA), 
+effect_predictions = data.frame(acc_hours, 
+                                cp_effect_pred, 
+                                op_effect_pred) %>% 
+  pivot_longer(cols = c(cp_effect_pred:op_effect_pred), 
+               names_to = c("pop", NA, NA), 
                names_sep = "_", 
                values_to = "pred") %>% 
   mutate(pop = toupper(pop))
 
-param_data %>% 
-ggplot(aes(x = acc_hours, y = estimate)) + 
+effects %>% 
+  ggplot(aes(x = acc_hours, y = effect)) + 
   facet_wrap(pop~.) + 
   geom_hline(yintercept = 0) +
-  geom_hline(data = acc_params, aes(yintercept = z_asymp),
+  geom_hline(data = effects_acc_params, aes(yintercept = z_asymp),
              colour = "grey") + 
-  geom_errorbar(aes(ymin = estimate - SE, ymax = estimate + SE), 
-                linewidth = 1, width = 0.3) + 
   geom_point(size = 3) + 
   geom_line(data = predictions, aes(x = acc_hours, y = pred),
             colour = "blue",
@@ -441,7 +538,7 @@ ggplot(aes(x = acc_hours, y = estimate)) +
   theme_matt_facets()
 ```
 
-<img src="../Figures/markdown/unnamed-chunk-14-1.png" style="display: block; margin: auto;" />
+<img src="../Figures/markdown/unnamed-chunk-16-1.png" style="display: block; margin: auto;" />
 
 ## Next Steps
 
