@@ -1,13 +1,15 @@
 Rate of Acclimation in Skistodiaptomus pallidus
 ================
-2026-03-08
+2026-04-08
 
-- [Preliminary Trial A - Before-and-After
-  Acclimation](#preliminary-trial-a---before-and-after-acclimation)
-- [Preliminary Trial B - Daily
-  Measurements](#preliminary-trial-b---daily-measurements)
-- [Preliminary Take-Aways](#preliminary-take-aways)
-- [Next Steps](#next-steps)
+- [Preliminary Trials](#preliminary-trials)
+  - [Before-and-After Acclimation](#before-and-after-acclimation)
+  - [Daily Measurements](#daily-measurements)
+- [Running Analyses](#running-analyses)
+  - [Data Summary](#data-summary)
+  - [Linear Models and Contrasts](#linear-models-and-contrasts)
+  - [Parameter estimation](#parameter-estimation)
+- [Initial Conclusions](#initial-conclusions)
 
 This project examines the rate and magnitude of acclimation in two
 populations of *Skistodiaptomus pallidus*. The preliminary trials
@@ -15,7 +17,9 @@ described below establish key elements of the experimental design and
 protocol. Note: Trials are presented in a logical, not chronological,
 order - Preliminary Trial B was performed before Trial A.
 
-## Preliminary Trial A - Before-and-After Acclimation
+## Preliminary Trials
+
+### Before-and-After Acclimation
 
 This trial examined the “maximum” amount of acclimation we can
 reasonably expect to measure in a feasible amount of time. Experiment
@@ -110,7 +114,7 @@ ctmax_data %>%
 
 <img src="../Figures/markdown/unnamed-chunk-4-1.png" style="display: block; margin: auto;" />
 
-## Preliminary Trial B - Daily Measurements
+### Daily Measurements
 
 In the other preliminary trial, the temperatures were more variable.
 Averages and standard deviations from the two incubators are shown in
@@ -189,13 +193,6 @@ ctmax_data %>%
 
 <img src="../Figures/markdown/unnamed-chunk-7-1.png" style="display: block; margin: auto;" />
 
-## Preliminary Take-Aways
-
-These two trials measured CTmax at different intervals, but used a
-similar experimental set-up. One of the main goals for these trials was
-to determine the appropriate experimental duration in order to determine
-both rate and magnitude of acclimation.
-
 Shown below are the reaction norms for the two populations based on the
 first and last measurements made (Day 6 in the daily measurements trial
 and Day 8 in the before-and-after acclimation trial). Results are
@@ -224,112 +221,138 @@ ctmax_data %>%
 
 <img src="../Figures/markdown/unnamed-chunk-8-1.png" style="display: block; margin: auto;" />
 
-All experimental data is shown below. This representation highlights the
-variability in the control treatments, which needs to be accounted for.
-One thing to note: CP warming individuals had lower CTmax values than
-the control individuals in both preliminary trials. This is something to
-watch in the future, to ensure no confounding factors are affecting the
-results.
+## Running Analyses
+
+### Data Summary
+
+All experimental data is shown below.
 
 ``` r
 ctmax_data %>% 
-  group_by(pop, treatment, acc_hours) %>% 
-  summarise(mean_ctmax = mean(ctmax)) %>% 
-  ggplot(aes(x = acc_hours, y = mean_ctmax, colour = treatment)) + 
-  facet_wrap(pop~.) + 
-  geom_point(data = ctmax_data, aes(y = ctmax),
-             alpha = 0.3) + 
-  geom_point(size = 3) + 
-  geom_line(linewidth = 1.5) + 
+  filter(ctmax > 34) %>% 
+  mutate(acc_hours = acc_hours + 0.1) %>% 
+  ggplot(aes(x = acc_hours, y = ctmax, colour = treatment)) + 
+  facet_grid(pop~exp_rep) +
+  geom_point(size = 2) + 
+  geom_smooth(method = "lm", formula = y ~ log(x)) + 
   scale_colour_manual(values = c("control" = "royalblue",
                                  "warming" = "brown2")) + 
-  labs(x = "Acclimation Day", 
+  labs(x = "Acclimation Hour", 
        y = "CTmax (°C)") + 
-  theme_matt_facets()
+  theme_matt_facets() + 
+  theme(legend.position = "bottom")
 ```
 
 <img src="../Figures/markdown/unnamed-chunk-9-1.png" style="display: block; margin: auto;" />
 
-We will be using a linear model to analyze the data, and to examine
-specific patterns in the changes in thermal limits over time. For now,
-we use a simple linear regression model: CTmax as a function of
-treatment, population, and acclimation day (with all possible
-interactions). This model is limited by the small sample size, but
-performs reasonably well.
+### Linear Models and Contrasts
+
+We will be using a linear model to analyze the data: CTmax as a function
+of treatment, population, and acclimation day (with all possible
+interactions). We’ve also included random intercepts for the
+experimental replicates and tube number (as a proxy for position in the
+water bath).
 
 ``` r
 # this is an initial version of the model; later versions will include experimental replicate and incubator as random effects
 
-model_data = ctmax_data %>% 
-  mutate(acc_hours = as.factor(acc_hours))
+model_data = ctmax_data %>%
+  filter(ctmax > 34) %>% 
+  filter(exp_rep >= 1) %>% 
+  mutate(acc_hours = acc_hours + 0.1,
+         acc_day = acc_day + 0.1, 
+         exp_rep = as.factor(exp_rep)) 
 
-prelim.model = lm(ctmax ~ acc_hours * treatment * pop, data = model_data)
-
-#performance::check_model(prelim.model)
+mixed.model = lmer(ctmax ~ log(acc_day) * treatment * pop + 
+                     (1 | exp_rep) + (1 | tube), 
+                   data = model_data)
 ```
 
-The model indicates a significant effect of all individual factors,
-along with a significant interaction between 1) acclimation time and
-treatment, 2) acclimation time and population, and 3) the full three-way
-interaction (as would be expected if populations differ in their
-acclimation capacities).
+This model performs well.
 
 ``` r
-car::Anova(prelim.model) 
-## Anova Table (Type II tests)
+performance::check_model(prelim.model)
+```
+
+<img src="../Figures/markdown/unnamed-chunk-11-1.png" style="display: block; margin: auto;" />
+
+The model indicates a significant effect of treatment and population,
+along with a significant interaction between acclimation time and
+treatment.
+
+``` r
+#summary(mixed.model)
+
+car::Anova(mixed.model, type = "III") 
+## Analysis of Deviance Table (Type III Wald chisquare tests)
 ## 
 ## Response: ctmax
-##                          Sum Sq Df F value    Pr(>F)    
-## acc_hours                9.8598  7 10.3521 4.088e-09 ***
-## treatment                1.7973  1 13.2094 0.0004972 ***
-## pop                      7.1966  1 52.8913 2.376e-10 ***
-## acc_hours:treatment      4.4276  7  4.6487 0.0002167 ***
-## acc_hours:pop            2.4833  7  2.6073 0.0179780 *  
-## treatment:pop            0.0327  1  0.2403 0.6253663    
-## acc_hours:treatment:pop  2.7463  6  3.3640 0.0053105 ** 
-## Residuals               10.6130 78                      
+##                                 Chisq Df Pr(>Chisq)    
+## (Intercept)                1.3213e+05  1  < 2.2e-16 ***
+## log(acc_day)               6.0000e-04  1  0.9809799    
+## treatment                  6.8247e+00  1  0.0089904 ** 
+## pop                        8.5837e+00  1  0.0033918 ** 
+## log(acc_day):treatment     1.2562e+01  1  0.0003938 ***
+## log(acc_day):pop           3.2600e-02  1  0.8566117    
+## treatment:pop              1.2627e+00  1  0.2611439    
+## log(acc_day):treatment:pop 1.6716e+00  1  0.1960478    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
 
-We’ll calculate estimated marginal means for each treatment group on
-each acclimation day. These marginal means can then be used to calculate
-pairwise contrasts between the control and warming groups (CTmax in the
-22°C group - CTmax in the 16°C group). A positive contrast indicates an
-increase in CTmax in the warming group relative to the control group
-(i.e. an increase in thermal limits after acclimation to higher
-temperatures).
+We can also use linear models to calculate estimated marginal means for
+each treatment-population combination on each day. We then calculate
+contrasts between the control and warming treatment groups for each day.
+A positive contrast indicates an increase in CTmax in the warming group
+relative to the control group (i.e. an increase in thermal limits after
+acclimation to higher temperatures).
 
-These contrasts will be the basis for estimating the rate and magnitude
-of acclimation capacities. Below is a rough approximate of what that
-might look like, with a logarithmic relationship shown between the
-effect of acclimation and the acclimation duration.
+These contrasts provide one potential approach for estimating the rate
+and magnitude of acclimation capacities using the mathematical framework
+proposed by Burton and Einum.
+
+Below is a rough approximate of what that might look like, with a
+logarithmic relationship shown between the effect of acclimation and the
+acclimation duration.
 
 ``` r
-contrasts = emmeans::emmeans(prelim.model, ~ treatment | pop * acc_hours) %>% 
+
+cat_model_data = ctmax_data %>%
+  filter(ctmax > 34) %>% 
+  filter(exp_rep >= 1) %>% 
+  mutate(acc_hours = as.factor(acc_hours), 
+         acc_day = as.factor(acc_day), 
+         exp_rep = as.factor(exp_rep)) 
+
+cat_mixed.model = lmer(ctmax ~ acc_day * treatment * pop + 
+                         (1 | exp_rep) + (1 | tube), 
+                       data = cat_model_data)
+
+
+contrasts = emmeans::emmeans(cat_mixed.model, ~ treatment | pop * acc_day) %>% 
   emmeans::contrast("revpairwise") %>% as_tibble() %>% 
-  mutate(acc_hours = as.numeric(as.character(acc_hours)))
+  mutate(acc_day = as.numeric(as.character(acc_day)))
 
 contrasts %>% 
-  mutate(acc_hours = if_else(acc_hours == 0, 0.01, acc_hours)) %>% 
-  ggplot(aes(x = acc_hours, y = estimate)) + 
+  mutate(acc_day = if_else(acc_day == 0, 0.01, acc_day)) %>% 
+  ggplot(aes(x = acc_day, y = estimate)) + 
   facet_wrap(pop~.) + 
   geom_hline(yintercept = 0) +
   geom_errorbar(aes(ymin = estimate - SE, ymax = estimate + SE), 
                 linewidth = 1, width = 0.3) + 
   geom_point(size = 3) + 
   geom_smooth(method = "lm", formula = y ~ log(x)) + 
-  labs(x = "Acc. Hour", 
+  labs(x = "Acc. Day", 
        y = "Contrast (Warming - Control; °C)") + 
   theme_matt_facets()
 ```
 
-<img src="../Figures/markdown/unnamed-chunk-12-1.png" style="display: block; margin: auto;" />
+<img src="../Figures/markdown/unnamed-chunk-13-1.png" style="display: block; margin: auto;" />
 
-In order to actually estimate the parameters, we’ll have to use a more
-complex computational approach. Burton and Einum (2025) describe an
-approach for measuring both rate of acclimation and acclimation capacity
-from a time series of CTmax values.
+### Parameter estimation
+
+Burton and Einum (2025) describe an approach for measuring both rate of
+acclimation and acclimation capacity from a time series of CTmax values.
 
 Their approach relies on fitting the following model to the data: Zt =
 Za \* (1-e^(−λt))
@@ -342,15 +365,124 @@ at the different time points were all relative to the first CTmax
 measurements (e.g. all time series start at zero and measure the change
 relative to the start point).
 
-Our analysis standardizes data not based on the initial CTmax value, but
-rather based on the corresponding control values from each assay. For
-our analyses, we will fit the model to the estimated contrasts from each
-day.
+We will take two approaches here: 1) estimating these parameters for
+each experimental replicate (warming treatment only) to provide an
+average rate and magnitude for each population, and 2) estimating these
+parameters using the estimated contrasts from the linear mixed effects
+model.
 
-The parameter estimates from the preliminary model are shown below.
-Note: the estimate of lambda for the OP population is unrealistic, and
-likely reflects the limited sample size and general variability in the
-data.
+#### Approach 1 - Raw Data
+
+``` r
+# Zt = Za * (1-e^(−λt))
+# Za is the rescaled asymptotic critical temperature when acclimation is complete (i.e., plasticity capacity)
+# λ is the plasticity rate (per hour)
+
+raw_param_data = ctmax_data %>%
+  filter(treatment == "warming" & exp_rep != 0.5) %>% 
+  mutate(acc_hours = if_else(acc_hours == 0, 0.01, acc_hours)) 
+
+rep_params = data.frame()
+rep_means = data.frame()
+
+for (i in 1:length(unique(raw_param_data$pop))){
+  
+  pop_data = filter(raw_param_data, pop == unique(raw_param_data$pop)[i]) %>% 
+    drop_na() 
+  
+  for(rep in unique(pop_data$exp_rep)){
+    
+    rep_data = filter(pop_data, exp_rep == rep) %>% 
+      group_by(exp_rep, pop, acc_hours) %>%  
+      summarise(ctmax = mean(ctmax)) %>% 
+      ungroup() %>% 
+      mutate(adj_ctmax = ctmax - first(ctmax)) %>% 
+      filter(adj_ctmax >= 0)
+    
+    rep_means = bind_rows(rep_means, rep_data)
+    
+    mod1 = try(nls.multstart::nls_multstart(
+      adj_ctmax ~ z_asymp*(1-exp(-lambda*acc_hours)),
+      data = rep_data,
+      iter = 1000,
+      start_lower = c(z_asymp=0.01, lambda=0),
+      start_upper = c(z_asymp = 10, lambda=1),
+      lower = c(z_asymp = 0, lambda=0),
+      supp_errors = 'Y',
+      convergence_count = FALSE,
+      na.action = na.omit), silent =TRUE)
+    
+    
+    fit_error = (is(mod1, 'try-error')|is(mod1,'error')) 
+    
+    if(fit_error==F){   #if model converged
+      params = data.frame(
+        pop = rep_data$pop[1],
+        exp_rep = rep,
+        num_contrasts = length(rep_data$adj_ctmax),
+        z_asymp = summary(mod1)$coefficients[1,1],
+        z_asymp_var = vcov(mod1)[1,1],
+        lambda = summary(mod1)$coefficients[2,1],
+        lambda.var = vcov(mod1)[2,2]) %>% 
+        mutate(arr = z_asymp / (22-16))
+      
+      rep_params = bind_rows(rep_params, params)
+    }
+    
+  }
+  
+}
+
+if(dim(rep_params)[1] > 0){
+  rep_params %>% 
+    select(pop, exp_rep, n = num_contrasts, z_asymp, arr, lambda) %>% 
+    knitr::kable()
+}
+```
+
+| pop | exp_rep |   n |   z_asymp |       arr |    lambda |
+|:----|--------:|----:|----------:|----------:|----------:|
+| CP  |       1 |   7 | 0.9981064 | 0.1663511 | 0.1387654 |
+| CP  |       3 |   6 | 1.6305624 | 0.2717604 | 0.0240204 |
+| OP  |       1 |   7 | 0.4244840 | 0.0707473 | 0.0286941 |
+| OP  |       3 |   5 | 1.1046977 | 0.1841163 | 0.0361605 |
+
+The plot here shows the estimated contrasts on each day. The model fit
+is included for both populations (in blue), along with the estimated
+final magnitude of acclimation (grey horizontal line).
+
+``` r
+
+rep_predictions = data.frame(
+  pop = rep(rep_params$pop, each = 100), 
+  exp_rep = rep(rep_params$exp_rep, each = 100), 
+  z_asymp = rep(rep_params$z_asymp, each = 100), 
+  lambda = rep(rep_params$lambda, each = 100),
+  acc_hours = rep(seq(0, max(raw_param_data$acc_hours), length.out = 100)), times = dim(rep_params)[1]) %>% 
+  ungroup() %>% 
+  mutate(pred_ctmax = z_asymp * (1-exp(-lambda*acc_hours)))
+
+rep_means %>% 
+  filter(exp_rep != 0.5) %>% 
+  ggplot(aes(x = acc_hours, y = adj_ctmax)) + 
+  facet_grid(pop~exp_rep) + 
+  geom_hline(yintercept = 0) +
+  geom_hline(data = rep_params, aes(yintercept = z_asymp),
+             colour = "grey") + 
+  geom_point(size = 3) + 
+  geom_line(data = rep_predictions, aes(x = acc_hours, y = pred_ctmax),
+            colour = "blue",
+            linewidth=1.5) + 
+  labs(x = "Acc. Hours", 
+       y = "Contrast (Warming - Control; °C)") + 
+  theme_matt_facets()
+```
+
+<img src="../Figures/markdown/unnamed-chunk-15-1.png" style="display: block; margin: auto;" />
+
+#### Approach 2 - Model Contrasts
+
+The parameter estimates from the mixed effects model are shown below.
 
 ``` r
 # Zt = Za * (1-e^(−λt))
@@ -359,8 +491,8 @@ data.
 
 param_data = contrasts %>%
   group_by(pop) %>% 
-  arrange(acc_hours) %>% 
-  mutate(acc_hours = if_else(acc_hours == 0, 0.01, acc_hours)) 
+  arrange(acc_day) %>% 
+  mutate(acc_day = if_else(acc_day == 0, 0.01, acc_day)) 
 
 acc_params = data.frame()
 
@@ -369,15 +501,15 @@ for (i in 1:length(unique(param_data$pop))){
   pop_data = filter(param_data, pop == unique(param_data$pop)[i]) %>% 
     drop_na() 
   
-  mod1 = try(nls.multstart::nls_multstart(estimate ~ z_asymp*(1-exp(-lambda*acc_hours)),
-                           data = pop_data,
-                           iter = 1000,
-                           start_lower = c(z_asymp=0.01, lambda=0),
-                           start_upper = c(z_asymp = 10, lambda=1),
-                           lower = c(z_asymp = 0, lambda=0),
-                           supp_errors = 'Y',
-                           convergence_count = FALSE,
-                           na.action = na.omit), silent =TRUE)
+  mod1 = try(nls.multstart::nls_multstart(estimate ~ z_asymp*(1-exp(-lambda*acc_day)),
+                                          data = pop_data,
+                                          iter = 1000,
+                                          start_lower = c(z_asymp=0.01, lambda=0),
+                                          start_upper = c(z_asymp = 10, lambda=1),
+                                          lower = c(z_asymp = 0, lambda=0),
+                                          supp_errors = 'Y',
+                                          convergence_count = FALSE,
+                                          na.action = na.omit), silent =TRUE)
   
   
   fit_error = (is(mod1, 'try-error')|is(mod1,'error')) 
@@ -405,8 +537,8 @@ if(dim(acc_params)[1] > 0){
 
 | pop |   n |   z_asymp |       arr |     lambda |
 |:----|----:|----------:|----------:|-----------:|
-| CP  |   8 | 0.9634084 | 0.1605681 |  0.0124842 |
-| OP  |   7 | 0.4500000 | 0.0750000 | 27.8902376 |
+| CP  |   8 | 1.3386221 | 0.2231037 |  0.2335977 |
+| OP  |   7 | 0.6943733 | 0.1157289 | 16.8036879 |
 
 The plot here shows the estimated contrasts on each day. The model fit
 is included for both populations (in blue), along with the estimated
@@ -420,11 +552,11 @@ if(dim(acc_params)[1] > 0){
   op_params = filter(acc_params, pop == "OP")
   
   # Create a new data frame with predicted values
-  acc_hours <- seq(0, max(param_data$acc_hours), length.out = 100)
-  cp_pred <- cp_params$z_asymp*(1-exp(-cp_params$lambda*acc_hours))
-  op_pred <- op_params$z_asymp*(1-exp(-op_params$lambda*acc_hours))
+  acc_day <- seq(0, max(param_data$acc_day), length.out = 100)
+  cp_pred <- cp_params$z_asymp*(1-exp(-cp_params$lambda*acc_day))
+  op_pred <- op_params$z_asymp*(1-exp(-op_params$lambda*acc_day))
   
-  predictions = data.frame(acc_hours, 
+  predictions = data.frame(acc_day, 
                            cp_pred, 
                            op_pred) %>% 
     pivot_longer(cols = c(cp_pred:op_pred), 
@@ -434,7 +566,7 @@ if(dim(acc_params)[1] > 0){
     mutate(pop = toupper(pop))
   
   param_data %>% 
-    ggplot(aes(x = acc_hours, y = estimate)) + 
+    ggplot(aes(x = acc_day, y = estimate)) + 
     facet_wrap(pop~.) + 
     geom_hline(yintercept = 0) +
     geom_hline(data = acc_params, aes(yintercept = z_asymp),
@@ -442,7 +574,7 @@ if(dim(acc_params)[1] > 0){
     geom_errorbar(aes(ymin = estimate - SE, ymax = estimate + SE), 
                   linewidth = 1, width = 0.3) + 
     geom_point(size = 3) + 
-    geom_line(data = predictions, aes(x = acc_hours, y = pred),
+    geom_line(data = predictions, aes(x = acc_day, y = pred),
               colour = "blue",
               linewidth=1.5)+
     labs(x = "Acc. Day", 
@@ -452,102 +584,6 @@ if(dim(acc_params)[1] > 0){
 }
 ```
 
-<img src="../Figures/markdown/unnamed-chunk-14-1.png" style="display: block; margin: auto;" />
+<img src="../Figures/markdown/unnamed-chunk-17-1.png" style="display: block; margin: auto;" />
 
-An alternative approach is to estimate simple effect sizes.
-
-``` r
-effects = ctmax_data %>% 
-  group_by(exp_rep, acc_hours, pop, treatment) %>% 
-  summarise(mean_ctmax = mean(ctmax, na.rm = T)) %>% 
-  pivot_wider(names_from = treatment, 
-              values_from = mean_ctmax) %>% 
-  mutate(effect = warming - control) %>% 
-mutate(acc_hours = if_else(acc_hours == 0, 0.01, acc_hours)) 
-
-effects_acc_params = data.frame()
-
-for (i in 1:length(unique(effects$pop))){
-  
-  pop_data = filter(effects, pop == unique(effects$pop)[i]) %>% 
-    drop_na() 
-  
-  mod1 = try(nls.multstart::nls_multstart(effect ~ z_asymp*(1-exp(-lambda*acc_hours)),
-                                          data = pop_data,
-                                          iter = 1000,
-                                          start_lower = c(z_asymp=0.01, lambda=0),
-                                          start_upper = c(z_asymp = 10, lambda=1),
-                                          lower = c(z_asymp = 0, lambda=0),
-                                          supp_errors = 'Y',
-                                          convergence_count = FALSE,
-                                          na.action = na.omit), silent =TRUE)
-  
-  pop_params = data.frame(
-    z_asymp = summary(mod1)$coefficients[1,1],
-    z_asymp_var = vcov(mod1)[1,1],
-    lambda = summary(mod1)$coefficients[2,1],
-    lambda.var = vcov(mod1)[2,2],
-    pop = pop_data$pop[1],
-    num_contrasts = length(pop_data$effect)) %>% 
-    mutate(arr = z_asymp / (22-16))
-  
-  effects_acc_params = bind_rows(effects_acc_params, pop_params)
-  
-}
-
-effects_acc_params %>% 
-  select(pop, n = num_contrasts, z_asymp, arr, lambda) %>% 
-  knitr::kable()
-```
-
-| pop |   n |   z_asymp |       arr |     lambda |
-|:----|----:|----------:|----------:|-----------:|
-| CP  |   9 | 0.9636734 | 0.1606122 |  0.0124752 |
-| OP  |   8 | 0.4500000 | 0.0750000 | 27.5411979 |
-
-``` r
-cp_effect_params = filter(effects_acc_params, pop == "CP")
-op_effect_params = filter(effects_acc_params, pop == "OP")
-
-# Create a new data frame with predicted values
-acc_hours <- seq(0, max(effects$acc_hours), length.out = 100)
-cp_effect_pred <- cp_effect_params$z_asymp*(1-exp(-cp_effect_params$lambda*acc_hours))
-op_effect_pred <- op_effect_params$z_asymp*(1-exp(-op_effect_params$lambda*acc_hours))
-
-effect_predictions = data.frame(acc_hours, 
-                                cp_effect_pred, 
-                                op_effect_pred) %>% 
-  pivot_longer(cols = c(cp_effect_pred:op_effect_pred), 
-               names_to = c("pop", NA, NA), 
-               names_sep = "_", 
-               values_to = "pred") %>% 
-  mutate(pop = toupper(pop))
-
-effects %>% 
-  ggplot(aes(x = acc_hours, y = effect)) + 
-  facet_wrap(pop~.) + 
-  geom_hline(yintercept = 0) +
-  geom_hline(data = effects_acc_params, aes(yintercept = z_asymp),
-             colour = "grey") + 
-  geom_point(size = 3) + 
-  geom_line(data = predictions, aes(x = acc_hours, y = pred),
-            colour = "blue",
-            linewidth=1.5)+
-  labs(x = "Acc. Day", 
-       y = "Contrast (Warming - Control; °C)") + 
-  theme_matt_facets()
-```
-
-<img src="../Figures/markdown/unnamed-chunk-16-1.png" style="display: block; margin: auto;" />
-
-## Next Steps
-
-The preliminary data is encouraging - acclimation rate dynamics are
-uncertain, but the estimates of the magnitude of acclimation seem to
-converge within eight days of exposure to warming. The illustrative
-example from the Burton and Einum 2025 paper indicates an acclimation
-duration of ~10 days. Experimental replicates for this project should
-aim for that same duration, with CTmax assays on Day 0, 1, 2, 3, \[4\],
-\[5\], 6, 8, and 10. Experiments would take just under two weeks to
-complete: set up on Monday, with the Day 0 CTmax assay on Tuesday; days
-4 and 5 fall on the weekend; day 10 falls on Friday of the second week.
+## Initial Conclusions

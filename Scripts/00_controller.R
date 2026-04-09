@@ -1,6 +1,7 @@
 # Load in required packages
 library(rmarkdown)
 library(tidyverse)
+library(lmerTest)
 
 #Determine which scripts should be run
 set_up_experiment = F #Will assign tubes and create the raw data file
