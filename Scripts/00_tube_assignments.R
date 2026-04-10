@@ -65,7 +65,7 @@ assignments %>%
 #     
 #   }
 #   meta = bind_rows(meta, total)
-# }
+# }   
 # 
 # meta %>% 
 #   drop_na(treatment) %>% 
