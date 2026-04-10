@@ -264,11 +264,30 @@ ctmax_data %>%
   theme(legend.position = "bottom")
 ```
 
+The experimental replicates are combined here. 
+
+```{r fig.width=4, fig.height=5}
+
+ctmax_data %>% 
+  filter(ctmax > 34) %>% 
+  mutate(acc_hours = acc_hours + 0.1) %>% 
+  ggplot(aes(x = acc_hours, y = ctmax, colour = treatment)) + 
+  facet_grid(pop~.) +
+  geom_point(size = 2) + 
+  geom_smooth(method = "lm", formula = y ~ log(x)) + 
+  scale_colour_manual(values = c("control" = "royalblue",
+                                 "warming" = "brown2")) + 
+  labs(x = "Acclimation Hour", 
+       y = "CTmax (°C)") + 
+  theme_matt_facets() + 
+  theme(legend.position = "bottom")
+```
+
+
 ### Linear Models and Contrasts
 We will be using a linear model to analyze the data: CTmax as a function of treatment, population, and acclimation day (with all possible interactions). We've also included random intercepts for the experimental replicates and tube number (as a proxy for position in the water bath). 
 
 ```{r fig.height=11, fig.width=9}
-# this is an initial version of the model; later versions will include experimental replicate and incubator as random effects
 
 model_data = ctmax_data %>%
   filter(ctmax > 34) %>% 
@@ -285,7 +304,7 @@ mixed.model = lmer(ctmax ~ log(acc_day) * treatment * pop +
 This model performs well. 
 
 ```{r fig.height=11, fig.width=9}
-performance::check_model(prelim.model)
+performance::check_model(mixed.model)
 ```
 
 The model indicates a significant effect of treatment and population, along with a significant interaction between acclimation time and treatment. 
@@ -340,7 +359,7 @@ Burton and Einum (2025) describe an approach for measuring both rate of acclimat
 
 Their approach relies on fitting the following model to the data: Zt = Za * (1-e^(−λt))
 
-In this model, Zt is the effect of acclimation at time t. Za is the fully acclimated CTmax value (this is the magnitude of acclimation parameter). The parameter λ is the rate of acclimation. In the Burton and Einum study, data sets had to be transformed such that measurements at the different time points were all relative to the first CTmax measurements (e.g. all time series start at zero and measure the change relative to the start point).
+In this model, Zt is the effect of acclimation at time t. Za is the fully acclimated CTmax value (the asymptotic value, i.e. the parameter representing magnitude of acclimation). The parameter λ is the rate of acclimation. In the Burton and Einum study, data sets had to be transformed such that measurements at the different time points were all relative to the first CTmax measurements (e.g. all time series start at zero and measure the change relative to the start point).
 
 We will take two approaches here: 1) estimating these parameters for each experimental replicate (warming treatment only) to provide an average rate and magnitude for each population, and 2) estimating these parameters using the estimated contrasts from the linear mixed effects model. 
 
@@ -443,7 +462,6 @@ rep_means %>%
 
 ```
 
-
 #### Approach 2 - Model Contrasts
 The parameter estimates from the mixed effects model are shown below. 
 
@@ -464,15 +482,16 @@ for (i in 1:length(unique(param_data$pop))){
   pop_data = filter(param_data, pop == unique(param_data$pop)[i]) %>% 
     drop_na() 
   
-  mod1 = try(nls.multstart::nls_multstart(estimate ~ z_asymp*(1-exp(-lambda*acc_day)),
-                                          data = pop_data,
-                                          iter = 1000,
-                                          start_lower = c(z_asymp=0.01, lambda=0),
-                                          start_upper = c(z_asymp = 10, lambda=1),
-                                          lower = c(z_asymp = 0, lambda=0),
-                                          supp_errors = 'Y',
-                                          convergence_count = FALSE,
-                                          na.action = na.omit), silent =TRUE)
+  mod1 = try(nls.multstart::nls_multstart(
+    estimate ~ z_asymp*(1-exp(-lambda*acc_day)),
+    data = pop_data,
+    iter = 1000,
+    start_lower = c(z_asymp=0.01, lambda=0),
+    start_upper = c(z_asymp = 10, lambda=1),
+    lower = c(z_asymp = 0, lambda=0),
+    supp_errors = 'Y',
+    convergence_count = FALSE,
+    na.action = na.omit), silent =TRUE)
   
   
   fit_error = (is(mod1, 'try-error')|is(mod1,'error')) 

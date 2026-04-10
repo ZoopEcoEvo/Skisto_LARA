@@ -1,6 +1,6 @@
 Rate of Acclimation in Skistodiaptomus pallidus
 ================
-2026-04-08
+2026-04-09
 
 - [Preliminary Trials](#preliminary-trials)
   - [Before-and-After Acclimation](#before-and-after-acclimation)
@@ -245,6 +245,27 @@ ctmax_data %>%
 
 <img src="../Figures/markdown/unnamed-chunk-9-1.png" style="display: block; margin: auto;" />
 
+The experimental replicates are combined here.
+
+``` r
+
+ctmax_data %>% 
+  filter(ctmax > 34) %>% 
+  mutate(acc_hours = acc_hours + 0.1) %>% 
+  ggplot(aes(x = acc_hours, y = ctmax, colour = treatment)) + 
+  facet_grid(pop~.) +
+  geom_point(size = 2) + 
+  geom_smooth(method = "lm", formula = y ~ log(x)) + 
+  scale_colour_manual(values = c("control" = "royalblue",
+                                 "warming" = "brown2")) + 
+  labs(x = "Acclimation Hour", 
+       y = "CTmax (°C)") + 
+  theme_matt_facets() + 
+  theme(legend.position = "bottom")
+```
+
+<img src="../Figures/markdown/unnamed-chunk-10-1.png" style="display: block; margin: auto;" />
+
 ### Linear Models and Contrasts
 
 We will be using a linear model to analyze the data: CTmax as a function
@@ -254,7 +275,6 @@ experimental replicates and tube number (as a proxy for position in the
 water bath).
 
 ``` r
-# this is an initial version of the model; later versions will include experimental replicate and incubator as random effects
 
 model_data = ctmax_data %>%
   filter(ctmax > 34) %>% 
@@ -271,10 +291,10 @@ mixed.model = lmer(ctmax ~ log(acc_day) * treatment * pop +
 This model performs well.
 
 ``` r
-performance::check_model(prelim.model)
+performance::check_model(mixed.model)
 ```
 
-<img src="../Figures/markdown/unnamed-chunk-11-1.png" style="display: block; margin: auto;" />
+<img src="../Figures/markdown/unnamed-chunk-12-1.png" style="display: block; margin: auto;" />
 
 The model indicates a significant effect of treatment and population,
 along with a significant interaction between acclimation time and
@@ -288,14 +308,14 @@ car::Anova(mixed.model, type = "III")
 ## 
 ## Response: ctmax
 ##                                 Chisq Df Pr(>Chisq)    
-## (Intercept)                1.3213e+05  1  < 2.2e-16 ***
-## log(acc_day)               6.0000e-04  1  0.9809799    
-## treatment                  6.8247e+00  1  0.0089904 ** 
-## pop                        8.5837e+00  1  0.0033918 ** 
-## log(acc_day):treatment     1.2562e+01  1  0.0003938 ***
-## log(acc_day):pop           3.2600e-02  1  0.8566117    
-## treatment:pop              1.2627e+00  1  0.2611439    
-## log(acc_day):treatment:pop 1.6716e+00  1  0.1960478    
+## (Intercept)                1.4001e+05  1  < 2.2e-16 ***
+## log(acc_day)               4.4980e-01  1   0.502441    
+## treatment                  5.6437e+00  1   0.017518 *  
+## pop                        8.6799e+00  1   0.003217 ** 
+## log(acc_day):treatment     9.3857e+00  1   0.002187 ** 
+## log(acc_day):pop           3.2700e-02  1   0.856526    
+## treatment:pop              1.0669e+00  1   0.301657    
+## log(acc_day):treatment:pop 1.9810e+00  1   0.159285    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
@@ -347,7 +367,7 @@ contrasts %>%
   theme_matt_facets()
 ```
 
-<img src="../Figures/markdown/unnamed-chunk-13-1.png" style="display: block; margin: auto;" />
+<img src="../Figures/markdown/unnamed-chunk-14-1.png" style="display: block; margin: auto;" />
 
 ### Parameter estimation
 
@@ -358,12 +378,12 @@ Their approach relies on fitting the following model to the data: Zt =
 Za \* (1-e^(−λt))
 
 In this model, Zt is the effect of acclimation at time t. Za is the
-fully acclimated CTmax value (this is the magnitude of acclimation
-parameter). The parameter λ is the rate of acclimation. In the Burton
-and Einum study, data sets had to be transformed such that measurements
-at the different time points were all relative to the first CTmax
-measurements (e.g. all time series start at zero and measure the change
-relative to the start point).
+fully acclimated CTmax value (the asymptotic value, i.e. the parameter
+representing magnitude of acclimation). The parameter λ is the rate of
+acclimation. In the Burton and Einum study, data sets had to be
+transformed such that measurements at the different time points were all
+relative to the first CTmax measurements (e.g. all time series start at
+zero and measure the change relative to the start point).
 
 We will take two approaches here: 1) estimating these parameters for
 each experimental replicate (warming treatment only) to provide an
@@ -443,9 +463,9 @@ if(dim(rep_params)[1] > 0){
 | pop | exp_rep |   n |   z_asymp |       arr |    lambda |
 |:----|--------:|----:|----------:|----------:|----------:|
 | CP  |       1 |   7 | 0.9981064 | 0.1663511 | 0.1387654 |
-| CP  |       3 |   6 | 1.6305624 | 0.2717604 | 0.0240204 |
+| CP  |       3 |   7 | 1.4958075 | 0.2493013 | 0.0286613 |
 | OP  |       1 |   7 | 0.4244840 | 0.0707473 | 0.0286941 |
-| OP  |       3 |   5 | 1.1046977 | 0.1841163 | 0.0361605 |
+| OP  |       3 |   6 | 0.8262069 | 0.1377012 | 0.0853824 |
 
 The plot here shows the estimated contrasts on each day. The model fit
 is included for both populations (in blue), along with the estimated
@@ -478,7 +498,7 @@ rep_means %>%
   theme_matt_facets()
 ```
 
-<img src="../Figures/markdown/unnamed-chunk-15-1.png" style="display: block; margin: auto;" />
+<img src="../Figures/markdown/unnamed-chunk-16-1.png" style="display: block; margin: auto;" />
 
 #### Approach 2 - Model Contrasts
 
@@ -501,15 +521,16 @@ for (i in 1:length(unique(param_data$pop))){
   pop_data = filter(param_data, pop == unique(param_data$pop)[i]) %>% 
     drop_na() 
   
-  mod1 = try(nls.multstart::nls_multstart(estimate ~ z_asymp*(1-exp(-lambda*acc_day)),
-                                          data = pop_data,
-                                          iter = 1000,
-                                          start_lower = c(z_asymp=0.01, lambda=0),
-                                          start_upper = c(z_asymp = 10, lambda=1),
-                                          lower = c(z_asymp = 0, lambda=0),
-                                          supp_errors = 'Y',
-                                          convergence_count = FALSE,
-                                          na.action = na.omit), silent =TRUE)
+  mod1 = try(nls.multstart::nls_multstart(
+    estimate ~ z_asymp*(1-exp(-lambda*acc_day)),
+    data = pop_data,
+    iter = 1000,
+    start_lower = c(z_asymp=0.01, lambda=0),
+    start_upper = c(z_asymp = 10, lambda=1),
+    lower = c(z_asymp = 0, lambda=0),
+    supp_errors = 'Y',
+    convergence_count = FALSE,
+    na.action = na.omit), silent =TRUE)
   
   
   fit_error = (is(mod1, 'try-error')|is(mod1,'error')) 
@@ -537,8 +558,8 @@ if(dim(acc_params)[1] > 0){
 
 | pop |   n |   z_asymp |       arr |     lambda |
 |:----|----:|----------:|----------:|-----------:|
-| CP  |   8 | 1.3386221 | 0.2231037 |  0.2335977 |
-| OP  |   7 | 0.6943733 | 0.1157289 | 16.8036879 |
+| CP  |   9 | 0.8102564 | 0.1350427 |  0.6807294 |
+| OP  |   8 | 0.5619249 | 0.0936541 | 19.9674361 |
 
 The plot here shows the estimated contrasts on each day. The model fit
 is included for both populations (in blue), along with the estimated
@@ -584,6 +605,6 @@ if(dim(acc_params)[1] > 0){
 }
 ```
 
-<img src="../Figures/markdown/unnamed-chunk-17-1.png" style="display: block; margin: auto;" />
+<img src="../Figures/markdown/unnamed-chunk-18-1.png" style="display: block; margin: auto;" />
 
 ## Initial Conclusions
