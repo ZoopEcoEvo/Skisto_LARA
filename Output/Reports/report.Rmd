@@ -296,7 +296,6 @@ All experimental data is shown below.
 
 ```{r fig.width=10, fig.height=5.2}
 ctmax_data %>% 
-  filter(ctmax > 34) %>% 
   mutate(acc_hours = acc_hours + 0.1) %>% 
   ggplot(aes(x = acc_hours, y = ctmax, colour = treatment)) + 
   facet_grid(pop~exp_rep) +
