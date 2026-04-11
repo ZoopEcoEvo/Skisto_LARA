@@ -44,7 +44,7 @@ inc_temps = readr::read_csv(list.files(path = "Raw_data/incubator_temps",
                 id = "file",
                 show_col_types = FALSE) %>% 
   janitor::clean_names() %>% 
-  mutate(date_time_est = lubridate::as_datetime(date_time_est, format = "%m/%d/%Y %H:%M:%S")) %>% 
+  mutate(date_time_est = lubridate::as_datetime(date_time, format = "%m/%d/%Y %H:%M:%S")) %>% 
   drop_na(temperature_c) %>% 
   mutate("exp_rep" = parse_number(file),
          "incubator_id" = parse_number(str_extract(file, pattern = "_inc.")), 

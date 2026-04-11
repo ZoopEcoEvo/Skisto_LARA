@@ -244,6 +244,43 @@ ctmax_data %>%
 
 ## Running Analyses
 
+### Incubator Temperatures 
+
+
+```{r}
+acc_windows = ctmax_data %>% 
+  group_by(exp_rep) %>% 
+  summarise(start_time = min(datetime), 
+            end_time = max(datetime)) 
+
+# To do: figure out a way to filter the data based on the acc_windows object; each exp_rep has a separate start and end time that should be used
+filtered_temps = inc_temps %>% 
+  mutate(exp_rep = if_else(exp_rep == 0, 0.5, exp_rep)) %>% 
+  left_join(acc_windows, by = "exp_rep") %>% 
+  filter(datetime > start_time & datetime < end_time) %>% 
+  mutate("treatment" = if_else(incubator_temp == 16, "control", "warming")) %>% 
+  select(exp_rep:temp_c, treatment)
+
+exp_temps = filtered_temps %>%  
+  group_by(exp_rep, treatment) %>% 
+  summarise(mean_temp = mean(temp_c), 
+            temp_sd = sd(temp_c)) %>% 
+  select(exp_rep, treatment, mean_temp, temp_sd) 
+
+exp_temps %>% 
+  knitr::kable(digits = 2)
+```
+
+
+```{r}
+
+ggplot(filtered_temps, aes(x = datetime, y = temp_c, color = factor(incubator_temp))) + 
+  facet_wrap(exp_rep~., scales = "free_x") + 
+  geom_line()
+
+```
+
+
 ### Data Summary 
 
 All experimental data is shown below. 
@@ -383,6 +420,9 @@ for (i in 1:length(unique(raw_param_data$pop))){
   
   for(rep in unique(pop_data$exp_rep)){
     
+    rep_control = filter(exp_temps, exp_rep == rep, treatment == "control")
+    rep_warming = filter(exp_temps, exp_rep == rep, treatment == "warming")
+    
     rep_data = filter(pop_data, exp_rep == rep) %>% 
       group_by(exp_rep, pop, acc_hours) %>%  
       summarise(ctmax = mean(ctmax)) %>% 
@@ -415,7 +455,8 @@ for (i in 1:length(unique(raw_param_data$pop))){
         z_asymp_var = vcov(mod1)[1,1],
         lambda = summary(mod1)$coefficients[2,1],
         lambda.var = vcov(mod1)[2,2]) %>% 
-        mutate(arr = z_asymp / (22-16))
+        mutate(temp_diff = rep_warming$mean_temp-rep_control$mean_temp, 
+               arr = z_asymp / (rep_warming$mean_temp-rep_control$mean_temp))
       
       rep_params = bind_rows(rep_params, params)
     }
@@ -426,7 +467,7 @@ for (i in 1:length(unique(raw_param_data$pop))){
 
 if(dim(rep_params)[1] > 0){
   rep_params %>% 
-    select(pop, exp_rep, n = num_contrasts, z_asymp, arr, lambda) %>% 
+    select(pop, exp_rep, n = num_contrasts, temp_diff, z_asymp, arr, lambda) %>% 
     knitr::kable()
 }
 
@@ -461,6 +502,14 @@ rep_means %>%
   theme_matt_facets()
 
 ```
+
+```{r}
+
+ggplot(rep_params, aes(x = arr, y = lambda)) + 
+  geom_point()
+
+```
+
 
 #### Approach 2 - Model Contrasts
 The parameter estimates from the mixed effects model are shown below. 

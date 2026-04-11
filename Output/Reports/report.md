@@ -1,11 +1,12 @@
 Rate of Acclimation in Skistodiaptomus pallidus
 ================
-2026-04-09
+2026-04-11
 
 - [Preliminary Trials](#preliminary-trials)
   - [Before-and-After Acclimation](#before-and-after-acclimation)
   - [Daily Measurements](#daily-measurements)
 - [Running Analyses](#running-analyses)
+  - [Incubator Temperatures](#incubator-temperatures)
   - [Data Summary](#data-summary)
   - [Linear Models and Contrasts](#linear-models-and-contrasts)
   - [Parameter estimation](#parameter-estimation)
@@ -223,6 +224,50 @@ ctmax_data %>%
 
 ## Running Analyses
 
+### Incubator Temperatures
+
+``` r
+acc_windows = ctmax_data %>% 
+  group_by(exp_rep) %>% 
+  summarise(start_time = min(datetime), 
+            end_time = max(datetime)) 
+
+# To do: figure out a way to filter the data based on the acc_windows object; each exp_rep has a separate start and end time that should be used
+filtered_temps = inc_temps %>% 
+  mutate(exp_rep = if_else(exp_rep == 0, 0.5, exp_rep)) %>% 
+  left_join(acc_windows, by = "exp_rep") %>% 
+  filter(datetime > start_time & datetime < end_time) %>% 
+  mutate("treatment" = if_else(incubator_temp == 16, "control", "warming")) %>% 
+  select(exp_rep:temp_c, treatment)
+
+exp_temps = filtered_temps %>%  
+  group_by(exp_rep, treatment) %>% 
+  summarise(mean_temp = mean(temp_c), 
+            temp_sd = sd(temp_c)) %>% 
+  select(exp_rep, treatment, mean_temp, temp_sd) 
+
+exp_temps %>% 
+  knitr::kable(digits = 2)
+```
+
+| exp_rep | treatment | mean_temp | temp_sd |
+|--------:|:----------|----------:|--------:|
+|     0.5 | control   |     16.16 |    0.05 |
+|     0.5 | warming   |     21.72 |    0.11 |
+|     1.0 | control   |     15.28 |    0.39 |
+|     1.0 | warming   |     22.42 |    0.68 |
+|     3.0 | control   |     16.12 |    0.15 |
+|     3.0 | warming   |     23.05 |    0.24 |
+
+``` r
+
+ggplot(filtered_temps, aes(x = datetime, y = temp_c, color = factor(incubator_temp))) + 
+  facet_wrap(exp_rep~., scales = "free_x") + 
+  geom_line()
+```
+
+<img src="../Figures/markdown/unnamed-chunk-10-1.png" style="display: block; margin: auto;" />
+
 ### Data Summary
 
 All experimental data is shown below.
@@ -243,7 +288,7 @@ ctmax_data %>%
   theme(legend.position = "bottom")
 ```
 
-<img src="../Figures/markdown/unnamed-chunk-9-1.png" style="display: block; margin: auto;" />
+<img src="../Figures/markdown/unnamed-chunk-11-1.png" style="display: block; margin: auto;" />
 
 The experimental replicates are combined here.
 
@@ -264,7 +309,7 @@ ctmax_data %>%
   theme(legend.position = "bottom")
 ```
 
-<img src="../Figures/markdown/unnamed-chunk-10-1.png" style="display: block; margin: auto;" />
+<img src="../Figures/markdown/unnamed-chunk-12-1.png" style="display: block; margin: auto;" />
 
 ### Linear Models and Contrasts
 
@@ -294,7 +339,7 @@ This model performs well.
 performance::check_model(mixed.model)
 ```
 
-<img src="../Figures/markdown/unnamed-chunk-12-1.png" style="display: block; margin: auto;" />
+<img src="../Figures/markdown/unnamed-chunk-14-1.png" style="display: block; margin: auto;" />
 
 The model indicates a significant effect of treatment and population,
 along with a significant interaction between acclimation time and
@@ -367,7 +412,7 @@ contrasts %>%
   theme_matt_facets()
 ```
 
-<img src="../Figures/markdown/unnamed-chunk-14-1.png" style="display: block; margin: auto;" />
+<img src="../Figures/markdown/unnamed-chunk-16-1.png" style="display: block; margin: auto;" />
 
 ### Parameter estimation
 
@@ -412,6 +457,9 @@ for (i in 1:length(unique(raw_param_data$pop))){
   
   for(rep in unique(pop_data$exp_rep)){
     
+    rep_control = filter(exp_temps, exp_rep == rep, treatment == "control")
+    rep_warming = filter(exp_temps, exp_rep == rep, treatment == "warming")
+    
     rep_data = filter(pop_data, exp_rep == rep) %>% 
       group_by(exp_rep, pop, acc_hours) %>%  
       summarise(ctmax = mean(ctmax)) %>% 
@@ -444,7 +492,8 @@ for (i in 1:length(unique(raw_param_data$pop))){
         z_asymp_var = vcov(mod1)[1,1],
         lambda = summary(mod1)$coefficients[2,1],
         lambda.var = vcov(mod1)[2,2]) %>% 
-        mutate(arr = z_asymp / (22-16))
+        mutate(temp_diff = rep_warming$mean_temp-rep_control$mean_temp, 
+               arr = z_asymp / (rep_warming$mean_temp-rep_control$mean_temp))
       
       rep_params = bind_rows(rep_params, params)
     }
@@ -455,17 +504,17 @@ for (i in 1:length(unique(raw_param_data$pop))){
 
 if(dim(rep_params)[1] > 0){
   rep_params %>% 
-    select(pop, exp_rep, n = num_contrasts, z_asymp, arr, lambda) %>% 
+    select(pop, exp_rep, n = num_contrasts, temp_diff, z_asymp, arr, lambda) %>% 
     knitr::kable()
 }
 ```
 
-| pop | exp_rep |   n |   z_asymp |       arr |    lambda |
-|:----|--------:|----:|----------:|----------:|----------:|
-| CP  |       1 |   7 | 0.9981064 | 0.1663511 | 0.1387654 |
-| CP  |       3 |   7 | 1.4958075 | 0.2493013 | 0.0286613 |
-| OP  |       1 |   7 | 0.4244840 | 0.0707473 | 0.0286941 |
-| OP  |       3 |   6 | 0.8262069 | 0.1377012 | 0.0853824 |
+| pop | exp_rep |   n | temp_diff |   z_asymp |       arr |    lambda |
+|:----|--------:|----:|----------:|----------:|----------:|----------:|
+| CP  |       1 |   7 |  7.141744 | 0.9981064 | 0.1397567 | 0.1387654 |
+| CP  |       3 |   7 |  6.935977 | 1.4958075 | 0.2156592 | 0.0286613 |
+| OP  |       1 |   7 |  7.141744 | 0.4244840 | 0.0594370 | 0.0286941 |
+| OP  |       3 |   6 |  6.935977 | 0.8262069 | 0.1191190 | 0.0853824 |
 
 The plot here shows the estimated contrasts on each day. The model fit
 is included for both populations (in blue), along with the estimated
@@ -498,7 +547,15 @@ rep_means %>%
   theme_matt_facets()
 ```
 
-<img src="../Figures/markdown/unnamed-chunk-16-1.png" style="display: block; margin: auto;" />
+<img src="../Figures/markdown/unnamed-chunk-18-1.png" style="display: block; margin: auto;" />
+
+``` r
+
+ggplot(rep_params, aes(x = arr, y = lambda)) + 
+  geom_point()
+```
+
+<img src="../Figures/markdown/unnamed-chunk-19-1.png" style="display: block; margin: auto;" />
 
 #### Approach 2 - Model Contrasts
 
@@ -559,7 +616,7 @@ if(dim(acc_params)[1] > 0){
 | pop |   n |   z_asymp |       arr |     lambda |
 |:----|----:|----------:|----------:|-----------:|
 | CP  |   9 | 0.8102564 | 0.1350427 |  0.6807294 |
-| OP  |   8 | 0.5619249 | 0.0936541 | 19.9674361 |
+| OP  |   8 | 0.5619249 | 0.0936541 | 19.9674370 |
 
 The plot here shows the estimated contrasts on each day. The model fit
 is included for both populations (in blue), along with the estimated
@@ -605,6 +662,6 @@ if(dim(acc_params)[1] > 0){
 }
 ```
 
-<img src="../Figures/markdown/unnamed-chunk-18-1.png" style="display: block; margin: auto;" />
+<img src="../Figures/markdown/unnamed-chunk-21-1.png" style="display: block; margin: auto;" />
 
 ## Initial Conclusions
