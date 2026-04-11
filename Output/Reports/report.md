@@ -232,7 +232,6 @@ acc_windows = ctmax_data %>%
   summarise(start_time = min(datetime), 
             end_time = max(datetime)) 
 
-# To do: figure out a way to filter the data based on the acc_windows object; each exp_rep has a separate start and end time that should be used
 filtered_temps = inc_temps %>% 
   mutate(exp_rep = if_else(exp_rep == 0, 0.5, exp_rep)) %>% 
   left_join(acc_windows, by = "exp_rep") %>% 
@@ -247,23 +246,31 @@ exp_temps = filtered_temps %>%
   select(exp_rep, treatment, mean_temp, temp_sd) 
 
 exp_temps %>% 
+  pivot_wider(id_cols = c(exp_rep), 
+              names_from = treatment, 
+              values_from = mean_temp) %>%
+  mutate(temp_diff = warming - control) %>% 
   knitr::kable(digits = 2)
 ```
 
-| exp_rep | treatment | mean_temp | temp_sd |
-|--------:|:----------|----------:|--------:|
-|     0.5 | control   |     16.16 |    0.05 |
-|     0.5 | warming   |     21.72 |    0.11 |
-|     1.0 | control   |     15.28 |    0.39 |
-|     1.0 | warming   |     22.42 |    0.68 |
-|     3.0 | control   |     16.12 |    0.15 |
-|     3.0 | warming   |     23.05 |    0.24 |
+| exp_rep | control | warming | temp_diff |
+|--------:|--------:|--------:|----------:|
+|     0.5 |   16.16 |   21.72 |      5.56 |
+|     1.0 |   15.28 |   22.42 |      7.14 |
+|     3.0 |   16.12 |   23.05 |      6.94 |
 
 ``` r
 
 ggplot(filtered_temps, aes(x = datetime, y = temp_c, color = factor(incubator_temp))) + 
   facet_wrap(exp_rep~., scales = "free_x") + 
-  geom_line()
+  geom_hline(yintercept = c(16, 22)) + 
+  geom_line(linewidth = 2) + 
+  scale_colour_manual(values = c("royalblue", "brown2")) + 
+  labs(x = "Date", 
+       y = "Temperature (°C)", 
+       colour = "Incubator Set Temp.") + 
+  theme_matt_facets() + 
+  theme(legend.position = "bottom")
 ```
 
 <img src="../Figures/markdown/unnamed-chunk-10-1.png" style="display: block; margin: auto;" />
@@ -543,19 +550,11 @@ rep_means %>%
             colour = "blue",
             linewidth=1.5) + 
   labs(x = "Acc. Hours", 
-       y = "Contrast (Warming - Control; °C)") + 
+       y = "Change in CTmax (°C)") + 
   theme_matt_facets()
 ```
 
 <img src="../Figures/markdown/unnamed-chunk-18-1.png" style="display: block; margin: auto;" />
-
-``` r
-
-ggplot(rep_params, aes(x = arr, y = lambda)) + 
-  geom_point()
-```
-
-<img src="../Figures/markdown/unnamed-chunk-19-1.png" style="display: block; margin: auto;" />
 
 #### Approach 2 - Model Contrasts
 
@@ -616,7 +615,7 @@ if(dim(acc_params)[1] > 0){
 | pop |   n |   z_asymp |       arr |     lambda |
 |:----|----:|----------:|----------:|-----------:|
 | CP  |   9 | 0.8102564 | 0.1350427 |  0.6807294 |
-| OP  |   8 | 0.5619249 | 0.0936541 | 19.9674370 |
+| OP  |   8 | 0.5619249 | 0.0936541 | 19.9674363 |
 
 The plot here shows the estimated contrasts on each day. The model fit
 is included for both populations (in blue), along with the estimated
@@ -662,6 +661,6 @@ if(dim(acc_params)[1] > 0){
 }
 ```
 
-<img src="../Figures/markdown/unnamed-chunk-21-1.png" style="display: block; margin: auto;" />
+<img src="../Figures/markdown/unnamed-chunk-20-1.png" style="display: block; margin: auto;" />
 
 ## Initial Conclusions
