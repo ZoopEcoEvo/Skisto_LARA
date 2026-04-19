@@ -54,12 +54,37 @@ Hypothesis:
 
 ## Study Design
 
-Will start after second preliminary experiment
+Study Design Follows The Rate Of Acclimation Template
 
-This section should provide a detailed description of the study design. In addition to protocols and methodological details, this section should include a detailed accounting of replication and sample sizes.
+Species: Skistodiaptomus pallidus #Species 
+Generation: F>3
+Treatments: 16C (Control), 22C (Warm)
+Trait Measurement: CTmax
+Populations: Oschner Pond (OP), Centennial Park (CP)
+Replicates: 3
+Animals/dish = 23
+Total animals needed = 276 (92/replicate)
 
-Consider including a schematic or diagram. This could be an embedded image, or an encoded diagram (e.g. Quarto includes native support for [mermaid diagrams](https://quarto.org/docs/authoring/diagrams.html#overview)).
+1. Animals are collected from field and brought to lab.
+2. On setup day 56 adult females are selected from each culture and half of them go in either a control dish or a warm dish with 150mL of DIO and ~0.5mL-1.5mL C. ozolini.
+3. By the end of setup there will be four dishes: OP+C, CP+C, OP+W, or CP+W, and each dish will have 23 animals.
+Equation used to get # animals/dish: 
+Animals/dish = ((# of assays * # of tubes)/# of dishes) + (0.5 * # of assays)
+4. After setup each dish is placed into the control incubator overnight, a temperature sensor is also placed in the incubators in a dish was 150mL of water to closely monitor the internal temperatures of the incubators (in the incubator there are two shelves, the temperature treatments are always on the same shelf as one another but alternate every replicate, also the incubator that is used as the control or the warm alternates every replicate).
+5. On acclimation day 0, 2-3 animals from each dish are used to run a CTmax assay (input CTmax assay protocol), which animals from which dish go in which tube are randomized using ___
+6. After the assay each dish is placed in their respective incubators and the 10 Day ROA schedule below is followed.
+7. This is replicated 3 times.
+8. For the transcriptomic aspect of this project # adult females will be selected from each culture and evenly split into the same four dishes previously, theses animals will also be acclimated in the same way for 10 days, no assays will be done.
+9. The RNA of these individuals will be extracted, processed, and analyzed.
 
+
+10 Day ROA Schedule:
+|Acclimation Day|Setup| 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
+|---------------|-----| * | * | * | * |* +|---|---| * |---|---| *  |
+
+Key:
++ = Feed/Water Change | 
+* = CTmax measurement
 
 ## Statistics
 
