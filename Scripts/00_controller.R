@@ -36,6 +36,7 @@ ctmax_data = readr::read_csv(list.files(path = "Raw_data/ctmax_data",
   filter(ctmax > 34.5) %>% # Removing anomalously low CTmax values; threshold differs across experiments
   group_by(exp_rep) %>% 
   arrange(datetime) %>% 
+  filter(acc_day <= 8) %>% 
   mutate(acc_hours = as.numeric(difftime(time1 = datetime, time2 = first(datetime), units = "hours")))
   
 inc_temps = readr::read_csv(list.files(path = "Raw_data/incubator_temps", 

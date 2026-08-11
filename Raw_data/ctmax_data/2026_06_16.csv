@@ -11,4 +11,3 @@ exp_rep,exp_date,acc_day,start_time,water_bath,thermometer,tube,pop,treatment,ct
 4,6/16/2026,0,13:30,2,4,10,CP,control,36.8
 4,6/16/2026,0,13:30,2,4,11,OP,warming,36.5
 4,6/16/2026,0,13:30,2,4,12,OP,warming,37.1
-,,0,13:30,2,4,,,,
