@@ -39,6 +39,8 @@ ctmax_data = readr::read_csv(list.files(path = "Raw_data/ctmax_data",
   filter(acc_day <= 8) %>% 
   mutate(acc_hours = as.numeric(difftime(time1 = datetime, time2 = first(datetime), units = "hours")))
   
+write.csv(ctmax_data, "Output/Output_data/ctmax_data.csv", row.names = F)
+
 inc_temps = readr::read_csv(list.files(path = "Raw_data/incubator_temps", 
                            pattern = "*.csv", 
                            full.names = TRUE),
@@ -51,6 +53,8 @@ inc_temps = readr::read_csv(list.files(path = "Raw_data/incubator_temps",
          "incubator_id" = parse_number(str_extract(file, pattern = "_inc.")), 
          "incubator_temp" = parse_number(str_remove(file, pattern = "Raw_data/incubator_temps/rep._inc._"))) %>% 
   select(exp_rep, incubator_id, incubator_temp, "datetime" = date_time_est, "temp_c" = temperature_c)
+
+write.csv(inc_temps, "Output/Output_data/inc_temps.csv", row.names = F)
 
 if(make_report == T){
   render(input = "Output/Reports/report.Rmd", #Input the path to your .Rmd file here
