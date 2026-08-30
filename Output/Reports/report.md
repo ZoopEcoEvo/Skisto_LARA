@@ -1,6 +1,10 @@
-Rate of Acclimation in Skistodiaptomus pallidus
-================
-2026-04-11
+------------------------------------------------------------------------
+
+editor_options: markdown: wrap: 72 ---
+
+# Rate of Acclimation in Skistodiaptomus pallidus
+
+2026-06-28
 
 - [Preliminary Trials](#preliminary-trials)
   - [Before-and-After Acclimation](#before-and-after-acclimation)
@@ -12,23 +16,13 @@ Rate of Acclimation in Skistodiaptomus pallidus
   - [Parameter estimation](#parameter-estimation)
 - [Initial Conclusions](#initial-conclusions)
 
-This project examines the rate and magnitude of acclimation in two
-populations of *Skistodiaptomus pallidus*. The preliminary trials
-described below establish key elements of the experimental design and
-protocol. Note: Trials are presented in a logical, not chronological,
-order - Preliminary Trial B was performed before Trial A.
+This project examines the rate and magnitude of acclimation in two populations of *Skistodiaptomus pallidus*. The preliminary trials described below establish key elements of the experimental design and protocol. Note: Trials are presented in a logical, not chronological, order - Preliminary Trial B was performed before Trial A.
 
-## Preliminary Trials
+## Preliminary Trials {#preliminary-trials}
 
-### Before-and-After Acclimation
+### Before-and-After Acclimation {#before-and-after-acclimation}
 
-This trial examined the “maximum” amount of acclimation we can
-reasonably expect to measure in a feasible amount of time. Experiment
-duration is limited by factors like the generation time of copepods -
-long experiments risk conflating individual age and acclimation effects.
-Incubator temperatures were stable during this trial, tracked
-continuously using a HOBO logger submerged in similar amounts of water
-as used to maintain the copepods during acclimation.
+This trial examined the “maximum” amount of acclimation we can reasonably expect to measure in a feasible amount of time. Experiment duration is limited by factors like the generation time of copepods - long experiments risk conflating individual age and acclimation effects. Incubator temperatures were stable during this trial, tracked continuously using a HOBO logger submerged in similar amounts of water as used to maintain the copepods during acclimation.
 
 ``` r
 acc_windows = ctmax_data %>% 
@@ -68,13 +62,9 @@ inc_temps %>%
   theme(panel.grid = element_blank())
 ```
 
-<img src="../Figures/markdown/unnamed-chunk-2-1.png" style="display: block; margin: auto;" />
+<img src="../Figures/markdown/unnamed-chunk-2-1.png" style="display: block; margin: auto;"/>
 
-CTmax was measured before acclimation began and after 8 days of
-acclimation. Here is a quick check to make sure there’s no systematic
-differences between observers. Measurements for the four groups are
-shown for each acclimation day. The different water baths (i.e. the
-different observers) are shown in different colors.
+CTmax was measured before acclimation began and after 8 days of acclimation. Here is a quick check to make sure there’s no systematic differences between observers. Measurements for the four groups are shown for each acclimation day. The different water baths (i.e. the different observers) are shown in different colors.
 
 ``` r
 
@@ -88,12 +78,9 @@ ctmax_data %>%
   theme_matt_facets()
 ```
 
-<img src="../Figures/markdown/unnamed-chunk-3-1.png" style="display: block; margin: auto;" />
+<img src="../Figures/markdown/unnamed-chunk-3-1.png" style="display: block; margin: auto;"/>
 
-The change in CTmax over time for each of the four groups is shown
-below. There was a general increase in CTmax over time (increases in the
-control groups), but above this background change there was a pronounced
-increase in the CTmax for the Centennial Park warming group.
+The change in CTmax over time for each of the four groups is shown below. There was a general increase in CTmax over time (increases in the control groups), but above this background change there was a pronounced increase in the CTmax for the Centennial Park warming group.
 
 ``` r
 ctmax_data %>%  
@@ -113,15 +100,11 @@ ctmax_data %>%
   theme_matt()
 ```
 
-<img src="../Figures/markdown/unnamed-chunk-4-1.png" style="display: block; margin: auto;" />
+<img src="../Figures/markdown/unnamed-chunk-4-1.png" style="display: block; margin: auto;"/>
 
-### Daily Measurements
+### Daily Measurements {#daily-measurements}
 
-In the other preliminary trial, the temperatures were more variable.
-Averages and standard deviations from the two incubators are shown in
-this table. This may have due to fluctuations in ambient room
-temperature and/or because temperature loggers were measuring air, and
-not water, temperatures during this trial.
+In the other preliminary trial, the temperatures were more variable. Averages and standard deviations from the two incubators are shown in this table. This may have due to fluctuations in ambient room temperature and/or because temperature loggers were measuring air, and not water, temperatures during this trial.
 
 ``` r
 acc_windows = ctmax_data %>% 
@@ -144,9 +127,7 @@ inc_temps %>%
 |             16 |     15.28 |    0.39 |
 |             22 |     22.42 |    0.68 |
 
-While the average temperature was closer to the intended temperature in
-the 22°C incubator, temperature was more variable than in the 16°C
-incubator.
+While the average temperature was closer to the intended temperature in the 22°C incubator, temperature was more variable than in the 16°C incubator.
 
 ``` r
 
@@ -165,14 +146,9 @@ inc_temps %>%
   theme(panel.grid = element_blank())
 ```
 
-<img src="../Figures/markdown/unnamed-chunk-6-1.png" style="display: block; margin: auto;" />
+<img src="../Figures/markdown/unnamed-chunk-6-1.png" style="display: block; margin: auto;"/>
 
-Thermal limit data is shown below. The larger points indicate the mean
-for each treatment group on each acclimation day, with the raw data
-shown as lighter points in the background. A general trend of increasing
-thermal limits in the warming acclimation group is present, but there is
-a fair amount of variation. That being said, it is too early to make any
-conclusions about specific patterns.
+Thermal limit data is shown below. The larger points indicate the mean for each treatment group on each acclimation day, with the raw data shown as lighter points in the background. A general trend of increasing thermal limits in the warming acclimation group is present, but there is a fair amount of variation. That being said, it is too early to make any conclusions about specific patterns.
 
 ``` r
 ctmax_data %>% 
@@ -192,13 +168,9 @@ ctmax_data %>%
   theme_matt_facets()
 ```
 
-<img src="../Figures/markdown/unnamed-chunk-7-1.png" style="display: block; margin: auto;" />
+<img src="../Figures/markdown/unnamed-chunk-7-1.png" style="display: block; margin: auto;"/>
 
-Shown below are the reaction norms for the two populations based on the
-first and last measurements made (Day 6 in the daily measurements trial
-and Day 8 in the before-and-after acclimation trial). Results are
-similar for both populations, suggesting that an eight day period is
-sufficient for the effects of acclimation to plateau.
+Shown below are the reaction norms for the two populations based on the first and last measurements made (Day 6 in the daily measurements trial and Day 8 in the before-and-after acclimation trial). Results are similar for both populations, suggesting that an eight day period is sufficient for the effects of acclimation to plateau.
 
 ``` r
 ctmax_data %>%  
@@ -220,11 +192,11 @@ ctmax_data %>%
   theme_matt()
 ```
 
-<img src="../Figures/markdown/unnamed-chunk-8-1.png" style="display: block; margin: auto;" />
+<img src="../Figures/markdown/unnamed-chunk-8-1.png" style="display: block; margin: auto;"/>
 
-## Running Analyses
+## Running Analyses {#running-analyses}
 
-### Incubator Temperatures
+### Incubator Temperatures {#incubator-temperatures}
 
 ``` r
 acc_windows = ctmax_data %>% 
@@ -258,6 +230,7 @@ exp_temps %>%
 |     0.5 |   16.16 |   21.72 |      5.56 |
 |     1.0 |   15.28 |   22.42 |      7.14 |
 |     3.0 |   16.12 |   23.05 |      6.94 |
+|     4.0 |   16.09 |   22.35 |      6.26 |
 
 ``` r
 
@@ -273,15 +246,14 @@ ggplot(filtered_temps, aes(x = datetime, y = temp_c, color = factor(incubator_te
   theme(legend.position = "bottom")
 ```
 
-<img src="../Figures/markdown/unnamed-chunk-10-1.png" style="display: block; margin: auto;" />
+<img src="../Figures/markdown/unnamed-chunk-10-1.png" style="display: block; margin: auto;"/>
 
-### Data Summary
+### Data Summary {#data-summary}
 
 All experimental data is shown below.
 
 ``` r
 ctmax_data %>% 
-  filter(ctmax > 34) %>% 
   mutate(acc_hours = acc_hours + 0.1) %>% 
   ggplot(aes(x = acc_hours, y = ctmax, colour = treatment)) + 
   facet_grid(pop~exp_rep) +
@@ -295,7 +267,7 @@ ctmax_data %>%
   theme(legend.position = "bottom")
 ```
 
-<img src="../Figures/markdown/unnamed-chunk-11-1.png" style="display: block; margin: auto;" />
+<img src="../Figures/markdown/unnamed-chunk-11-1.png" style="display: block; margin: auto;"/>
 
 The experimental replicates are combined here.
 
@@ -316,15 +288,11 @@ ctmax_data %>%
   theme(legend.position = "bottom")
 ```
 
-<img src="../Figures/markdown/unnamed-chunk-12-1.png" style="display: block; margin: auto;" />
+<img src="../Figures/markdown/unnamed-chunk-12-1.png" style="display: block; margin: auto;"/>
 
-### Linear Models and Contrasts
+### Linear Models and Contrasts {#linear-models-and-contrasts}
 
-We will be using a linear model to analyze the data: CTmax as a function
-of treatment, population, and acclimation day (with all possible
-interactions). We’ve also included random intercepts for the
-experimental replicates and tube number (as a proxy for position in the
-water bath).
+We will be using a linear model to analyze the data: CTmax as a function of treatment, population, and acclimation day (with all possible interactions). We’ve also included random intercepts for the experimental replicates and tube number (as a proxy for position in the water bath).
 
 ``` r
 
@@ -346,11 +314,9 @@ This model performs well.
 performance::check_model(mixed.model)
 ```
 
-<img src="../Figures/markdown/unnamed-chunk-14-1.png" style="display: block; margin: auto;" />
+<img src="../Figures/markdown/unnamed-chunk-14-1.png" style="display: block; margin: auto;"/>
 
-The model indicates a significant effect of treatment and population,
-along with a significant interaction between acclimation time and
-treatment.
+The model indicates a significant effect of treatment and population, along with a significant interaction between acclimation time and treatment.
 
 ``` r
 #summary(mixed.model)
@@ -360,32 +326,23 @@ car::Anova(mixed.model, type = "III")
 ## 
 ## Response: ctmax
 ##                                 Chisq Df Pr(>Chisq)    
-## (Intercept)                1.4001e+05  1  < 2.2e-16 ***
-## log(acc_day)               4.4980e-01  1   0.502441    
-## treatment                  5.6437e+00  1   0.017518 *  
-## pop                        8.6799e+00  1   0.003217 ** 
-## log(acc_day):treatment     9.3857e+00  1   0.002187 ** 
-## log(acc_day):pop           3.2700e-02  1   0.856526    
-## treatment:pop              1.0669e+00  1   0.301657    
-## log(acc_day):treatment:pop 1.9810e+00  1   0.159285    
+## (Intercept)                2.3202e+05  1  < 2.2e-16 ***
+## log(acc_day)               4.2600e-02  1   0.836542    
+## treatment                  6.9528e+00  1   0.008369 ** 
+## pop                        1.0144e+01  1   0.001447 ** 
+## log(acc_day):treatment     1.5205e+01  1  9.645e-05 ***
+## log(acc_day):pop           1.7200e-02  1   0.895751    
+## treatment:pop              1.8734e+00  1   0.171089    
+## log(acc_day):treatment:pop 3.5032e+00  1   0.061249 .  
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
 
-We can also use linear models to calculate estimated marginal means for
-each treatment-population combination on each day. We then calculate
-contrasts between the control and warming treatment groups for each day.
-A positive contrast indicates an increase in CTmax in the warming group
-relative to the control group (i.e. an increase in thermal limits after
-acclimation to higher temperatures).
+We can also use linear models to calculate estimated marginal means for each treatment-population combination on each day. We then calculate contrasts between the control and warming treatment groups for each day. A positive contrast indicates an increase in CTmax in the warming group relative to the control group (i.e. an increase in thermal limits after acclimation to higher temperatures).
 
-These contrasts provide one potential approach for estimating the rate
-and magnitude of acclimation capacities using the mathematical framework
-proposed by Burton and Einum.
+These contrasts provide one potential approach for estimating the rate and magnitude of acclimation capacities using the mathematical framework proposed by Burton and Einum.
 
-Below is a rough approximate of what that might look like, with a
-logarithmic relationship shown between the effect of acclimation and the
-acclimation duration.
+Below is a rough approximate of what that might look like, with a logarithmic relationship shown between the effect of acclimation and the acclimation duration.
 
 ``` r
 
@@ -419,29 +376,17 @@ contrasts %>%
   theme_matt_facets()
 ```
 
-<img src="../Figures/markdown/unnamed-chunk-16-1.png" style="display: block; margin: auto;" />
+<img src="../Figures/markdown/unnamed-chunk-16-1.png" style="display: block; margin: auto;"/>
 
-### Parameter estimation
+### Parameter estimation {#parameter-estimation}
 
-Burton and Einum (2025) describe an approach for measuring both rate of
-acclimation and acclimation capacity from a time series of CTmax values.
+Burton and Einum (2025) describe an approach for measuring both rate of acclimation and acclimation capacity from a time series of CTmax values.
 
-Their approach relies on fitting the following model to the data: Zt =
-Za \* (1-e^(−λt))
+Their approach relies on fitting the following model to the data: Zt = Za \* (1-e\^(−λt))
 
-In this model, Zt is the effect of acclimation at time t. Za is the
-fully acclimated CTmax value (the asymptotic value, i.e. the parameter
-representing magnitude of acclimation). The parameter λ is the rate of
-acclimation. In the Burton and Einum study, data sets had to be
-transformed such that measurements at the different time points were all
-relative to the first CTmax measurements (e.g. all time series start at
-zero and measure the change relative to the start point).
+In this model, Zt is the effect of acclimation at time t. Za is the fully acclimated CTmax value (the asymptotic value, i.e. the parameter representing magnitude of acclimation). The parameter λ is the rate of acclimation. In the Burton and Einum study, data sets had to be transformed such that measurements at the different time points were all relative to the first CTmax measurements (e.g. all time series start at zero and measure the change relative to the start point).
 
-We will take two approaches here: 1) estimating these parameters for
-each experimental replicate (warming treatment only) to provide an
-average rate and magnitude for each population, and 2) estimating these
-parameters using the estimated contrasts from the linear mixed effects
-model.
+We will take two approaches here: 1) estimating these parameters for each experimental replicate (warming treatment only) to provide an average rate and magnitude for each population, and 2) estimating these parameters using the estimated contrasts from the linear mixed effects model.
 
 #### Approach 1 - Raw Data
 
@@ -520,12 +465,12 @@ if(dim(rep_params)[1] > 0){
 |:----|--------:|----:|----------:|----------:|----------:|----------:|
 | CP  |       1 |   7 |  7.141744 | 0.9981064 | 0.1397567 | 0.1387654 |
 | CP  |       3 |   7 |  6.935977 | 1.4958075 | 0.2156592 | 0.0286613 |
+| CP  |       4 |   7 |  6.259351 | 0.8805599 | 0.1406791 | 0.4680296 |
 | OP  |       1 |   7 |  7.141744 | 0.4244840 | 0.0594370 | 0.0286941 |
 | OP  |       3 |   6 |  6.935977 | 0.8262069 | 0.1191190 | 0.0853824 |
+| OP  |       4 |   5 |  6.259351 | 0.3113551 | 0.0497424 | 0.0503000 |
 
-The plot here shows the estimated contrasts on each day. The model fit
-is included for both populations (in blue), along with the estimated
-final magnitude of acclimation (grey horizontal line).
+The plot here shows the estimated contrasts on each day. The model fit is included for both populations (in blue), along with the estimated final magnitude of acclimation (grey horizontal line).
 
 ``` r
 
@@ -554,7 +499,7 @@ rep_means %>%
   theme_matt_facets()
 ```
 
-<img src="../Figures/markdown/unnamed-chunk-18-1.png" style="display: block; margin: auto;" />
+<img src="../Figures/markdown/unnamed-chunk-18-1.png" style="display: block; margin: auto;"/>
 
 #### Approach 2 - Model Contrasts
 
@@ -614,12 +559,10 @@ if(dim(acc_params)[1] > 0){
 
 | pop |   n |   z_asymp |       arr |     lambda |
 |:----|----:|----------:|----------:|-----------:|
-| CP  |   9 | 0.8102564 | 0.1350427 |  0.6807294 |
-| OP  |   8 | 0.5619249 | 0.0936541 | 19.9674363 |
+| CP  |   9 | 0.7943787 | 0.1323965 |  0.5790405 |
+| OP  |   8 | 0.5072438 | 0.0845406 | 25.1972145 |
 
-The plot here shows the estimated contrasts on each day. The model fit
-is included for both populations (in blue), along with the estimated
-final magnitude of acclimation (grey horizontal line).
+The plot here shows the estimated contrasts on each day. The model fit is included for both populations (in blue), along with the estimated final magnitude of acclimation (grey horizontal line).
 
 ``` r
 
@@ -661,6 +604,6 @@ if(dim(acc_params)[1] > 0){
 }
 ```
 
-<img src="../Figures/markdown/unnamed-chunk-20-1.png" style="display: block; margin: auto;" />
+<img src="../Figures/markdown/unnamed-chunk-20-1.png" style="display: block; margin: auto;"/>
 
-## Initial Conclusions
+## Initial Conclusions {#initial-conclusions}

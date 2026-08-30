@@ -88,3 +88,4 @@ assignments %>%
 #   count(simulation, pop, treatment, experiment) %>%
 #   ggplot(aes(x = simulation, y = n)) +
 #   geom_point()
+
