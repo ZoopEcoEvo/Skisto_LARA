@@ -33,10 +33,9 @@ ctmax_data = readr::read_csv(list.files(path = "Raw_data/ctmax_data",
   mutate(datetime = lubridate::as_datetime(paste(exp_date, start_time, sep = " "), 
                                            format = "%m/%d/%Y %H:%M:%S")) %>% 
   filter(pop != "thermometer") %>% 
-  filter(ctmax > 34.5) %>% # Removing anomalously low CTmax values; threshold differs across experiments
+  filter(ctmax > 35) %>% # Removing anomalously low CTmax values
   group_by(exp_rep) %>% 
   arrange(datetime) %>% 
-  filter(acc_day <= 8) %>% 
   mutate(acc_hours = as.numeric(difftime(time1 = datetime, time2 = first(datetime), units = "hours")))
   
 write.csv(ctmax_data, "Output/Output_data/ctmax_data.csv", row.names = F)
