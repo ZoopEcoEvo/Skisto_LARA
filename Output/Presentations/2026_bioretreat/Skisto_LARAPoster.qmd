@@ -475,4 +475,4 @@ param_data %>%
 
 # Acknowledgements
 
-Text here
+This project was supported by the KCS Science Scholarship 2025 & 2026.
