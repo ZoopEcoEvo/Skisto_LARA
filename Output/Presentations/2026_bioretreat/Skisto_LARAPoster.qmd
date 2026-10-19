@@ -1,5 +1,5 @@
 ---
-title: "Local adaptaion of the rate of acclimation in the widespread freshwater copepod *Skistodiaptomus pallidus*"
+title: "Local adaptation of the rate of acclimation in the freshwater copepod *Skistodiaptomus pallidus*"
 author:
   - name: Nathan Gaffin
     affiliations:
@@ -397,8 +397,9 @@ ctmax_data %>%
   mutate(acc_hours = acc_hours + 0.1) %>% 
   ggplot(aes(x = acc_hours, y = ctmax, colour = treatment)) + 
   facet_wrap(pop ~ .) +
-  geom_point(size = 2) + 
-  geom_smooth(method = "lm", formula = y ~ log(x)) + 
+  geom_point(size = 1.2, alpha = 0.7) + 
+  geom_smooth(method = "lm", formula = y ~ log(x),
+              linewidth = 2.8) + 
   scale_colour_manual(values = c("control" = "royalblue",
                                  "warming" = "brown2")) + 
   labs(
@@ -461,18 +462,23 @@ param_data %>%
 
 # Methods
 
-![](exp_design.png){fig-align="center"}
+![](exp_design.png){fig-align="center" width="100%"}
 
 # Conclusions
 
 - *S. pallidus* is able to acclimate rapidly to warming.
 
-- Populations differ in both capacity and acclimation, with a potental negative correlation between capacity and rate of acclimation.
+- Populations differ in both capacity and acclimation, with a potential negative correlation between capacity and rate of acclimation.
+
+\
 
 # Next Steps
 
 - Replicate with additional populations of *S. pallidus*
+- Characterizing lake temperature dynamics to examine environmental drivers of the evolution of acclimation parameters.
+
+\
 
 # Acknowledgements
 
-This project was supported by the KCS Science Scholarship 2025 & 2026.
+This project was supported by the KCS Science Scholarship during Summer 2025 & 2026.
