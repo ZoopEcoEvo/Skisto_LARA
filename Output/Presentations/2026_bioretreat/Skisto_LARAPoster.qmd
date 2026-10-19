@@ -43,7 +43,7 @@ format:
                                           // column (overrides `columns`; end each column
                                           // with {{< pagebreak >}}). none = equal widths.
           column-gap: 1em,                // space between columns
-          primary: rgb("#0b4545"),        // title bar, section boxes, column lines
+          primary: rgb("#155E63"),        // title bar, section boxes, column lines
           secondary: rgb("#008080"),      // links, code accents
           title-text: white,
           body-text: black,
